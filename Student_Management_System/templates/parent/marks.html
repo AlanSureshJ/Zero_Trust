@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}Child's Marks - Parent Portal{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <div class="dashboard-header">
+        <h1>Academic Performance</h1>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">← Back to Dashboard</a>
+    </div>
+
+    <div class="student-info-card">
+        <div class="student-avatar"></div>
+        <div class="student-details">
+            <h2>John Doe</h2>
+            <p><strong>Roll No:</strong> CS2024001</p>
+            <p><strong>Class:</strong> B.Tech CSE - 3rd Year</p>
+            <p><strong>Section:</strong> A</p>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon"></div>
+            <div class="stat-value">8.2</div>
+            <div class="stat-label">Current SGPA</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"></div>
+            <div class="stat-value">8.0</div>
+            <div class="stat-label">Overall CGPA</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon"></div>
+            <div class="stat-value">60</div>
+            <div class="stat-label">Total Credits</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>Semester 3 Results</h2>
+        </div>
+        <div class="card-body">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Credits</th>
+                        <th>Internal</th>
+                        <th>External</th>
+                        <th>Total</th>
+                        <th>Grade</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Data Structures</td>
+                        <td>4</td>
+                        <td>36/40</td>
+                        <td>52/60</td>
+                        <td>88/100</td>
+                        <td><span class="grade-badge grade-a">A</span></td>
+                        <td><span class="status-badge status-pass">Pass</span></td>
+                    </tr>
+                    <tr>
+                        <td>Database Management</td>
+                        <td>4</td>
+                        <td>34/40</td>
+                        <td>48/60</td>
+                        <td>82/100</td>
+                        <td><span class="grade-badge grade-a">A</span></td>
+                        <td><span class="status-badge status-pass">Pass</span></td>
+                    </tr>
+                    <tr>
+                        <td>Operating Systems</td>
+                        <td>3</td>
+                        <td>32/40</td>
+                        <td>45/60</td>
+                        <td>77/100</td>
+                        <td><span class="grade-badge grade-b">B+</span></td>
+                        <td><span class="status-badge status-pass">Pass</span></td>
+                    </tr>
+                    <tr>
+                        <td>Computer Networks</td>
+                        <td>3</td>
+                        <td>30/40</td>
+                        <td>42/60</td>
+                        <td>72/100</td>
+                        <td><span class="grade-badge grade-b">B</span></td>
+                        <td><span class="status-badge status-pass">Pass</span></td>
+                    </tr>
+                    <tr>
+                        <td>Web Technologies</td>
+                        <td>3</td>
+                        <td>38/40</td>
+                        <td>55/60</td>
+                        <td>93/100</td>
+                        <td><span class="grade-badge grade-a">A+</span></td>
+                        <td><span class="status-badge status-pass">Pass</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+   
+</div>
+{% endblock %}

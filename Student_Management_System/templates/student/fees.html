@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Fee Details - Student Portal{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <div class="dashboard-header">
+        <h1>💰 Fee Details</h1>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">← Back to Dashboard</a>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">₹</div>
+            <div class="stat-value">₹{{ total_fees|round(0, 'common') }}</div>
+            <div class="stat-label">Total Fees</div>
+        </div>
+        <div class="stat-card stat-success">
+            <div class="stat-icon">✓</div>
+            <div class="stat-value">₹{{ fees_paid|round(0, 'common') }}</div>
+            <div class="stat-label">Paid Amount</div>
+        </div>
+        <div class="stat-card stat-warning">
+            <div class="stat-icon">!</div>
+            <div class="stat-value">₹{{ fees_due|round(0, 'common') }}</div>
+            <div class="stat-label">Pending Amount</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">📅</div>
+            <div class="stat-value">{{ next_due }}</div>
+            <div class="stat-label">Next Due Date</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>Payment History</h2>
+        </div>
+        <div class="card-body">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Transaction ID</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Mode</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in payments %}
+                    <tr>
+                        <td>{{ p.transaction_id }}</td>
+                        <td>{{ p.payment_date }}</td>
+                        <td>₹{{ p.amount }}</td>
+                        <td>{{ p.payment_method }}</td>
+                        <td><span class="status-badge status-pass">Success</span></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" style="text-align: center;">No payment records found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+</div>
+{% endblock %}

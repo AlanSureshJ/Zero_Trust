@@ -1,0 +1,478 @@
+2026-02-10 19:27:43.498273 | OTP 980264 sent to 357108
+2026-02-10 19:27:43.499039 | student1 initiated login, OTP sent
+2026-02-10 19:28:10.087764 | Trust reduced by 10 due to invalid_otp
+2026-02-10 19:28:17.094057 | Trust reduced by 10 due to invalid_otp
+2026-02-10 19:28:42.442123 | User student1 logged out
+2026-02-10 19:28:46.306984 | OTP 297363 sent to admin@example.com
+2026-02-10 19:28:46.307555 | admin1 initiated login, OTP sent
+2026-02-10 19:29:20.455348 | User admin1 logged out
+2026-02-10 19:29:24.917143 | OTP 815082 sent to 357108
+2026-02-10 19:29:24.917640 | student1 initiated login, OTP sent
+2026-02-10 19:29:39.144185 | User student1 logged out
+2026-02-10 19:29:41.848379 | OTP 644480 sent to alice.parent@example.com
+2026-02-10 19:29:41.848840 | parent1 initiated login, OTP sent
+2026-02-10 19:34:49.340206 | User parent1 logged out
+2026-02-10 19:34:53.745555 | OTP 490359 sent to 357108
+2026-02-10 19:34:53.746011 | student1 initiated login, OTP sent
+2026-02-10 19:47:52.196183 | OTP 540912 sent to 357108
+2026-02-10 19:47:52.197125 | student1 initiated login, OTP sent
+2026-02-10 19:51:03.925126 | User student1 logged out
+2026-02-10 19:51:06.906756 | OTP 200494 sent to admin@example.com
+2026-02-10 19:51:06.907238 | admin1 initiated login, OTP sent
+2026-02-10 19:51:30.984760 | OTP 462445 sent to 357108
+2026-02-10 19:51:30.985290 | student1 initiated login, OTP sent
+2026-02-10 20:10:29.152308 | OTP 481014 sent to admin@example.com
+2026-02-10 20:10:29.153244 | admin1 initiated login, OTP sent
+2026-02-10 20:39:46.422316 | OTP 943305 sent to 357108
+2026-02-10 20:39:46.423438 | student1 initiated login, OTP sent
+2026-02-10 20:43:56.540657 | User student1 logged out
+2026-02-10 20:43:58.318154 | OTP 005241 sent to 357108
+2026-02-10 20:43:58.318643 | student1 initiated login, OTP sent
+2026-02-10 20:50:21.426824 | User student1 logged out
+2026-02-10 20:50:23.575123 | OTP 844945 sent to 357108
+2026-02-10 20:50:23.575817 | student1 initiated login, OTP sent
+2026-02-10 21:08:02.335519 | OTP 052499 sent to 357108
+2026-02-10 21:08:02.336093 | student1 initiated login, OTP sent
+2026-02-10 21:14:02.071216 | OTP 999110 sent to 357108
+2026-02-10 21:14:02.071880 | student1 initiated login, OTP sent
+2026-02-10 21:15:23.645282 | User student1 logged out
+2026-02-10 21:15:24.830237 | OTP 350909 sent to 357108
+2026-02-10 21:15:24.830721 | student1 initiated login, OTP sent
+2026-02-10 21:15:46.445425 | OTP 343200 sent to 357108
+2026-02-10 21:15:46.445948 | student1 initiated login, OTP sent
+2026-02-10 21:18:33.747948 | OTP 205469 sent to 357108
+2026-02-10 21:18:33.748532 | student1 initiated login, OTP sent
+2026-02-10 21:18:44.789519 | OTP 327242 sent to 357108
+2026-02-10 21:18:44.790105 | student1 initiated login, OTP sent
+2026-02-10 21:19:02.542582 | User student1 logged out
+2026-02-10 21:19:05.556251 | OTP 435729 sent to admin@example.com
+2026-02-10 21:19:05.556729 | admin1 initiated login, OTP sent
+2026-02-10 21:20:39.402337 | User admin1 logged out
+2026-02-10 21:20:42.587182 | OTP 515848 sent to 357108
+2026-02-10 21:20:42.587800 | student1 initiated login, OTP sent
+2026-02-10 21:23:26.810343 | ERROR reducing trust score for user 1: 'charmap' codec can't encode character '\u2192' in position 91: character maps to <undefined>
+2026-02-10 21:27:25.887277 | User student1 logged out
+2026-02-10 21:27:27.460580 | OTP 791257 sent to 357108
+2026-02-10 21:27:27.461215 | student1 initiated login, OTP sent
+2026-02-10 21:34:05.246392 | OTP 752267 sent to 357108
+2026-02-10 21:34:05.247420 | student1 initiated login, OTP sent
+2026-02-10 21:34:19.415984 | TRUST_REDUCED | User: student1 | Path: /admin/users/add | 95 -> 80 | Reason: RBAC_VIOLATION
+2026-02-11 07:35:40.800929 | OTP 296144 sent to 357108
+2026-02-11 07:35:40.801964 | student1 initiated login, OTP sent
+2026-02-11 07:44:53.864140 | OTP 604524 sent to 357108
+2026-02-11 07:44:53.865288 | student1 initiated login, OTP sent
+2026-02-11 07:45:07.052371 | TRUST_REDUCED | User: student1 | Reason: RATE_LIMIT | 90 -> 80 | Violations: 1
+2026-02-11 07:45:08.511158 | TRUST_REDUCED | User: student1 | Reason: RATE_LIMIT | 80 -> 70 | Violations: 2
+2026-02-11 07:45:11.023254 | TRUST_REDUCED | User: student1 | Reason: RATE_LIMIT | 70 -> 60 | Violations: 3
+2026-02-11 07:59:57.146459 | Behavior log auto-reset for student1
+2026-02-11 07:59:59.037762 | OTP 630830 sent to 357108
+2026-02-11 07:59:59.038323 | student1 initiated login, OTP sent
+2026-02-11 08:00:37.426956 | TRUST_REDUCED | User: student1 | Path: /faculty/marks | 65 -> 50 | Reason: RBAC_VIOLATION
+2026-02-11 08:00:47.735768 | TRUST_REDUCED | User: student1 | Path: /faculty/marks | 50 -> 35 | Reason: RBAC_VIOLATION
+2026-02-11 08:00:51.635211 | TRUST_REDUCED | User: student1 | Reason: RATE_LIMIT | 35 -> 25 | Violations: 1
+2026-02-11 08:00:51.657352 | User student1 logged out
+2026-02-11 08:00:53.445471 | OTP 528596 sent to 357108
+2026-02-11 08:00:53.446060 | student1 initiated login, OTP sent
+2026-02-11 08:09:05.984077 | OTP 569330 sent to admin@example.com
+2026-02-11 08:09:05.984590 | admin1 initiated login, OTP sent
+2026-02-11 08:09:17.794881 | TRUST_RESET | User: student1 | Reset by Admin: admin1 | 30 -> 100
+2026-02-11 08:19:13.412804 | Behavior log auto-reset for admin1
+2026-02-11 08:19:14.831799 | OTP 216469 sent to admin@example.com
+2026-02-11 08:19:14.832411 | admin1 initiated login, OTP sent
+2026-02-11 08:19:22.499147 | OTP 785858 sent to 357108
+2026-02-11 08:19:22.499680 | student1 initiated login, OTP sent
+2026-02-11 21:43:40.366175 | OTP 837415 sent to 357108
+2026-02-11 21:43:40.367018 | student1 initiated login, OTP sent
+2026-02-11 21:44:36.219704 | TRUST_REDUCED | User: student1 | Reason: RATE_LIMIT | 100 -> 90 | Violations: 1
+2026-02-11 21:44:36.525114 | TRUST_REDUCED | User: student1 | Reason: RATE_LIMIT | 90 -> 80 | Violations: 2
+2026-02-11 21:44:43.849626 | TRUST_REDUCED | User: student1 | Reason: RATE_LIMIT | 80 -> 70 | Violations: 3
+2026-02-11 21:44:43.858366 | TRUST_REDUCED | User: student1 | Path: /admin/users/add | 70 -> 55 | Reason: RBAC_VIOLATION
+2026-02-11 21:44:43.876519 | TRUST_REDUCED | User: student1 | Reason: RATE_LIMIT | 55 -> 45 | Violations: 4
+2026-02-11 21:44:43.914062 | User student1 logged out
+2026-02-11 21:44:47.106461 | OTP 592814 sent to 357108
+2026-02-11 21:44:47.106972 | student1 initiated login, OTP sent
+2026-02-11 21:45:36.820967 | TRUST_REDUCED | User: student1 | Reason: RATE_LIMIT | 50 -> 40 | Violations: 1
+2026-02-11 21:45:37.088079 | TRUST_REDUCED | User: student1 | Reason: RATE_LIMIT | 40 -> 30 | Violations: 2
+2026-02-11 21:45:45.175613 | TRUST_REDUCED | User: student1 | Reason: RATE_LIMIT | 30 -> 20 | Violations: 3
+2026-02-11 21:45:45.195807 | User student1 logged out
+2026-02-11 21:45:46.854553 | OTP 367292 sent to 357108
+2026-02-11 21:45:46.855147 | student1 initiated login, OTP sent
+2026-02-11 21:45:54.387707 | User student1 logged out
+2026-02-11 21:45:55.897575 | OTP 459462 sent to 357108
+2026-02-11 21:45:55.898137 | student1 initiated login, OTP sent
+2026-02-11 21:46:06.848837 | OTP 977917 sent to 357108
+2026-02-11 21:46:06.849455 | student1 initiated login, OTP sent
+2026-02-11 21:46:11.457774 | User student1 logged out
+2026-02-11 21:46:13.165050 | OTP 599454 sent to 357108
+2026-02-11 21:46:13.165771 | student1 initiated login, OTP sent
+2026-02-11 21:49:53.580289 | User testuser logged out
+2026-02-11 21:49:53.593935 | User testuser logged out
+2026-02-11 21:49:59.244026 | User testuser logged out
+2026-02-11 21:49:59.256609 | User testuser logged out
+2026-02-11 21:50:11.813206 | User testuser logged out
+2026-02-11 21:50:11.825462 | User testuser logged out
+2026-02-11 21:50:29.281840 | OTP 412728 sent to admin@example.com
+2026-02-11 21:50:29.282426 | admin1 initiated login, OTP sent
+2026-02-11 21:50:44.962742 | TRUST_RESET | User: student1 | Reset by Admin: admin1 | 20 -> 100
+2026-02-11 21:50:49.073146 | User admin1 logged out
+2026-02-11 21:50:53.010950 | OTP 432051 sent to 357108
+2026-02-11 21:50:53.011562 | student1 initiated login, OTP sent
+2026-02-11 21:51:07.740049 | TRUST_REDUCED | User: student1 | Reason: RATE_LIMIT | 100 -> 90 | Violations: 1
+2026-02-11 21:51:08.023913 | TRUST_REDUCED | User: student1 | Reason: RATE_LIMIT | 90 -> 80 | Violations: 2
+2026-02-11 21:51:08.214133 | TRUST_REDUCED | User: student1 | Reason: RATE_LIMIT | 80 -> 70 | Violations: 3
+2026-02-11 21:51:08.620205 | TRUST_REDUCED | User: student1 | Reason: RATE_LIMIT | 70 -> 60 | Violations: 4
+2026-02-11 21:51:08.639124 | User student1 logged out
+2026-02-11 21:51:10.574241 | OTP 227995 sent to 357108
+2026-02-11 21:51:10.574900 | student1 initiated login, OTP sent
+2026-02-11 21:51:19.586403 | TRUST_REDUCED | User: student1 | Path: /admin/users/add | 65 -> 50 | Reason: RBAC_VIOLATION
+2026-02-11 21:52:06.422829 | User testuser logged out
+2026-02-11 21:52:06.546636 | User testuser logged out
+2026-02-11 21:53:32.308713 | User student1 logged out
+2026-02-11 21:53:45.409946 | OTP 731120 sent to alice.parent@example.com
+2026-02-11 21:53:45.410498 | parent1 initiated login, OTP sent
+2026-02-11 22:01:10.616497 | User parent1 logged out
+2026-02-11 22:01:33.397243 | OTP 749414 sent to alice.parent@example.com
+2026-02-11 22:01:33.397914 | parent1 initiated login, OTP sent
+2026-02-11 22:05:02.920615 | TRUST_REDUCED | User: parent1 | Reason: RATE_LIMIT | 100 -> 90 | Violations: 1
+2026-02-11 22:05:22.440309 | TRUST_REDUCED | User: parent1 | Reason: RATE_LIMIT | 90 -> 80 | Violations: 2
+2026-02-11 22:05:22.467570 | TRUST_REDUCED | User: parent1 | Reason: RATE_LIMIT | 80 -> 70 | Violations: 3
+2026-02-11 22:05:32.850903 | User parent1 logged out
+2026-02-11 22:05:36.887593 | OTP 478883 sent to 357108
+2026-02-11 22:05:36.888077 | student1 initiated login, OTP sent
+2026-02-11 22:06:06.379026 | TRUST_REDUCED | User: student1 | Reason: RATE_LIMIT | 55 -> 45 | Violations: 1
+2026-02-11 22:06:06.398050 | TRUST_REDUCED | User: student1 | Reason: RATE_LIMIT | 45 -> 35 | Violations: 2
+2026-02-11 22:06:15.943552 | TRUST_REDUCED | User: student1 | Reason: RATE_LIMIT | 35 -> 25 | Violations: 3
+2026-02-11 22:06:15.963513 | User student1 logged out
+2026-02-11 22:06:24.064659 | OTP 294157 sent to admin@example.com
+2026-02-11 22:06:24.065311 | admin1 initiated login, OTP sent
+2026-02-11 22:07:21.201716 | TRUST_REDUCED | User: admin1 | Reason: RATE_LIMIT | 100 -> 90 | Violations: 1
+2026-02-11 22:07:33.647708 | TRUST_REDUCED | User: admin1 | Reason: RATE_LIMIT | 90 -> 80 | Violations: 2
+2026-02-11 22:07:33.653995 | TRUST_RESET | User: student1 | Reset by Admin: admin1 | 25 -> 100
+2026-02-11 22:07:33.679227 | TRUST_REDUCED | User: admin1 | Reason: RATE_LIMIT | 80 -> 70 | Violations: 3
+2026-02-11 22:07:46.959092 | TRUST_REDUCED | User: admin1 | Reason: RATE_LIMIT | 70 -> 60 | Violations: 4
+2026-02-11 22:07:46.976232 | User admin1 logged out
+2026-02-11 22:08:00.451628 | OTP 096922 sent to admin@example.com
+2026-02-11 22:08:00.452221 | admin1 initiated login, OTP sent
+2026-02-17 21:55:17.107311 | OTP 262153 sent to prof.kumar@example.com
+2026-02-17 21:55:17.108312 | faculty1 initiated login, OTP sent
+2026-02-17 21:56:15.570150 | TRUST_REDUCED | User: faculty1 | Reason: RATE_LIMIT | 100 -> 90 | Violations: 1
+2026-02-17 21:56:28.819402 | TRUST_REDUCED | User: faculty1 | Reason: RATE_LIMIT | 90 -> 80 | Violations: 2
+2026-02-17 21:56:30.048281 | TRUST_REDUCED | User: faculty1 | Reason: RATE_LIMIT | 80 -> 70 | Violations: 3
+2026-02-17 21:56:38.117761 | TRUST_REDUCED | User: faculty1 | Reason: RATE_LIMIT | 70 -> 60 | Violations: 4
+2026-02-17 21:56:38.154121 | User faculty1 logged out
+2026-02-20 11:49:45.657363 | OTP 755788 sent to admin@example.com
+2026-02-20 11:49:45.660520 | admin1 initiated login, OTP sent
+2026-02-20 11:49:53.521356 | ANOMALY_DETECTED | User: admin1 | Type: TIME_OF_DAY | Unusual login time: 11:00 (Typical: 22:00)
+2026-02-20 11:50:05.578822 | TRUST_REDUCED | User: admin1 | Reason: RATE_LIMIT | 35 -> 25 | Violations: 1
+2026-02-20 11:50:05.638570 | User admin1 logged out
+2026-02-20 11:50:09.301967 | OTP 351416 sent to admin@example.com
+2026-02-20 11:50:09.302466 | admin1 initiated login, OTP sent
+2026-02-20 11:50:13.363865 | ANOMALY_DETECTED | User: admin1 | Type: TIME_OF_DAY | Unusual login time: 11:00 (Typical: 22:00)
+2026-02-20 11:50:13.415149 | User admin1 logged out
+2026-02-20 11:54:26.444657 | OTP 459935 sent to admin@example.com
+2026-02-20 11:54:26.445997 | admin1 initiated login, OTP sent
+2026-02-20 11:54:33.076978 | User admin1 logged out
+2026-02-20 11:58:31.382655 | OTP 921013 sent to admin@example.com
+2026-02-20 11:58:31.383340 | admin1 initiated login, OTP sent
+2026-02-20 11:58:46.810902 | TRUST_RESET | User: faculty1 | Reset by Admin: admin1 | 60 -> 100
+2026-02-20 11:58:48.997098 | TRUST_RESET | User: parent1 | Reset by Admin: admin1 | 70 -> 100
+2026-02-20 11:59:07.316130 | TRUST_REDUCED | User: admin1 | Reason: RATE_LIMIT | 100 -> 90 | Violations: 1
+2026-02-20 11:59:11.143892 | TRUST_REDUCED | User: admin1 | Reason: RATE_LIMIT | 90 -> 80 | Violations: 2
+2026-02-20 11:59:12.581155 | TRUST_REDUCED | User: admin1 | Reason: RATE_LIMIT | 80 -> 70 | Violations: 3
+2026-02-20 11:59:12.594925 | TRUST_REDUCED | User: admin1 | Reason: RATE_LIMIT | 70 -> 60 | Violations: 4
+2026-02-20 11:59:12.610588 | User admin1 logged out
+2026-02-20 11:59:14.051584 | OTP 134544 sent to admin@example.com
+2026-02-20 11:59:14.052213 | admin1 initiated login, OTP sent
+2026-02-20 11:59:20.078252 | Admin toggled Read-Only Mode: ON
+2026-02-20 12:00:22.560787 | TRUST_RESET | User: admin1 | Reset by Admin: admin1 | 65 -> 100
+2026-02-20 12:00:26.667830 | User admin1 logged out
+2026-02-20 12:00:27.851610 | OTP 478751 sent to admin@example.com
+2026-02-20 12:00:27.852148 | admin1 initiated login, OTP sent
+2026-02-20 12:00:35.160265 | Admin toggled Read-Only Mode: OFF
+2026-02-20 12:00:37.209171 | Admin toggled Read-Only Mode: ON
+2026-02-20 12:00:38.508160 | User admin1 logged out
+2026-02-20 12:00:42.045422 | OTP 650792 sent to 357108
+2026-02-20 12:00:42.045838 | student1 initiated login, OTP sent
+2026-02-20 12:00:49.119011 | ANOMALY_DETECTED | User: student1 | Type: TIME_OF_DAY | Unusual login time: 12:00 (Typical: 21:00)
+2026-02-20 14:29:11.934560 | OTP 170723 sent to 357108
+2026-02-20 14:29:11.935566 | student1 initiated login, OTP sent
+2026-02-20 14:29:29.212305 | ANOMALY_DETECTED | User: student1 | Type: TIME_OF_DAY | Unusual login time: 14:00 (Typical: 21:00)
+2026-02-20 14:29:57.982391 | TRUST_REDUCED | User: student1 | Reason: RATE_LIMIT | 60 -> 50 | Violations: 1
+2026-02-20 14:30:07.952285 | User student1 logged out
+2026-02-20 14:30:15.169134 | OTP 511929 sent to admin@example.com
+2026-02-20 14:30:15.170033 | admin1 initiated login, OTP sent
+2026-02-20 14:30:28.686128 | TRUST_RESET | User: student1 | Reset by Admin: admin1 | 50 -> 100
+2026-02-20 14:31:23.224191 | User admin1 logged out
+2026-02-20 14:31:29.445429 | OTP 747710 sent to 357108
+2026-02-20 14:31:29.447333 | student1 initiated login, OTP sent
+2026-02-20 14:31:38.172010 | ANOMALY_DETECTED | User: student1 | Type: TIME_OF_DAY | Unusual login time: 14:00 (Typical: 21:00)
+2026-02-20 14:31:45.758701 | TRUST_REDUCED | User: student1 | Path: /admin/users/add | 90 -> 75 | Reason: RBAC_VIOLATION
+2026-02-20 14:32:04.392208 | TRUST_REDUCED | User: student1 | Path: /admin/users/add | 75 -> 60 | Reason: RBAC_VIOLATION
+2026-02-20 14:32:11.229993 | TRUST_REDUCED | User: student1 | Path: /admin/users/add | 60 -> 45 | Reason: RBAC_VIOLATION
+2026-02-20 14:32:15.615924 | TRUST_REDUCED | User: student1 | Reason: RATE_LIMIT | 45 -> 35 | Violations: 1
+2026-02-20 14:32:15.643704 | TRUST_REDUCED | User: student1 | Reason: RATE_LIMIT | 35 -> 25 | Violations: 2
+2026-02-20 14:32:15.671586 | User student1 logged out
+2026-02-20 14:32:24.279921 | OTP 933955 sent to 357108
+2026-02-20 14:32:24.280680 | student1 initiated login, OTP sent
+2026-02-20 14:32:58.782153 | ANOMALY_DETECTED | User: student1 | Type: TIME_OF_DAY | Unusual login time: 14:00 (Typical: 21:00)
+2026-02-20 14:32:58.843607 | User student1 logged out
+2026-02-20 14:33:17.100538 | OTP 910829 sent to 357108
+2026-02-20 14:33:17.102404 | student1 initiated login, OTP sent
+2026-02-20 14:33:44.956471 | OTP 413087 sent to admin@example.com
+2026-02-20 14:33:44.958649 | admin1 initiated login, OTP sent
+2026-02-20 14:33:55.091888 | TRUST_RESET | User: student1 | Reset by Admin: admin1 | 10 -> 100
+2026-02-20 14:33:56.609652 | User admin1 logged out
+2026-02-20 14:34:02.292414 | OTP 078810 sent to 357108
+2026-02-20 14:34:02.293157 | student1 initiated login, OTP sent
+2026-02-20 14:34:09.779436 | ANOMALY_DETECTED | User: student1 | Type: TIME_OF_DAY | Unusual login time: 14:00 (Typical: 21:00)
+2026-02-20 14:34:58.635443 | User student1 logged out
+2026-02-20 14:35:06.567887 | OTP 090801 sent to 357108
+2026-02-20 14:35:06.568306 | student1 initiated login, OTP sent
+2026-02-27 21:34:54.337997 | OTP 066797 sent to admin@portal.com
+2026-02-27 21:34:54.338757 | admin initiated login, OTP sent
+2026-02-27 21:35:58.438507 | Admin added user alan
+2026-02-27 21:36:17.629841 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 100 -> 90 | Violations: 1
+2026-02-27 21:36:24.189134 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 90 -> 80 | Violations: 2
+2026-02-27 21:36:29.686184 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 80 -> 70 | Violations: 3
+2026-02-27 21:36:40.390924 | User admin logged out
+2026-02-27 21:36:43.990427 | OTP 909234 sent to alansuresh2004@gmail.com
+2026-02-27 21:36:43.990844 | alan initiated login, OTP sent
+2026-02-27 21:39:13.877137 | User alan logged out
+2026-02-27 21:39:48.241359 | OTP 897289 sent to admin@portal.com
+2026-02-27 21:39:48.241901 | admin initiated login, OTP sent
+2026-02-27 21:40:44.401375 | TRUST_RESET | User: admin | Reset by Admin: admin | 75 -> 100
+2026-02-27 21:40:53.386958 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 100 -> 90 | Violations: 1
+2026-02-27 21:44:15.258325 | User admin logged out
+2026-02-27 21:44:17.415609 | OTP 350318 sent to alansuresh2004@gmail.com
+2026-02-27 21:44:17.416183 | alan initiated login, OTP sent
+2026-02-27 21:44:44.620378 | TRUST_REDUCED | User: alan | Reason: RATE_LIMIT | 100 -> 90 | Violations: 1
+2026-02-27 21:44:47.103493 | User alan logged out
+2026-02-27 21:44:52.434300 | OTP 090767 sent to admin@portal.com
+2026-02-27 21:44:52.434851 | admin initiated login, OTP sent
+2026-02-27 21:45:44.134842 | Admin added user teacher
+2026-02-27 21:46:58.988148 | User admin logged out
+2026-02-27 21:47:01.606470 | OTP 018006 sent to lol@gmail.com
+2026-02-27 21:47:01.607009 | teacher initiated login, OTP sent
+2026-02-27 21:54:45.054415 | User teacher logged out
+2026-02-27 21:54:48.213708 | OTP 181765 sent to admin@portal.com
+2026-02-27 21:54:48.214165 | admin initiated login, OTP sent
+2026-02-27 21:57:05.690368 | User admin logged out
+2026-02-27 21:57:08.551516 | OTP 600886 sent to lol@gmail.com
+2026-02-27 21:57:08.552293 | teacher initiated login, OTP sent
+2026-02-27 21:57:21.595258 | OTP 844404 sent to lol@gmail.com
+2026-02-27 21:57:21.595722 | teacher initiated login, OTP sent
+2026-02-27 22:06:57.365822 | User teacher logged out
+2026-02-27 22:07:05.086285 | OTP 910556 sent to admin@portal.com
+2026-02-27 22:07:05.086955 | admin initiated login, OTP sent
+2026-02-27 22:07:29.179855 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 100 -> 90 | Violations: 1
+2026-02-27 22:07:32.010014 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 90 -> 80 | Violations: 2
+2026-02-27 22:07:34.107388 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 80 -> 70 | Violations: 3
+2026-02-27 22:07:34.123017 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 70 -> 60 | Violations: 4
+2026-02-27 22:07:34.137778 | User admin logged out
+2026-02-27 22:07:40.285023 | OTP 377385 sent to alansuresh2004@gmail.com
+2026-02-27 22:07:40.285539 | alan initiated login, OTP sent
+2026-02-27 22:07:58.140475 | User alan logged out
+2026-02-27 22:08:00.892512 | OTP 686259 sent to lol@gmail.com
+2026-02-27 22:08:00.893072 | teacher initiated login, OTP sent
+2026-02-27 22:09:02.360650 | TRUST_REDUCED | User: teacher | Reason: RATE_LIMIT | 90 -> 80 | Violations: 1
+2026-02-27 22:09:02.378784 | TRUST_REDUCED | User: teacher | Reason: RATE_LIMIT | 80 -> 70 | Violations: 2
+2026-02-27 22:09:04.036237 | TRUST_REDUCED | User: teacher | Reason: RATE_LIMIT | 70 -> 60 | Violations: 3
+2026-02-27 22:09:06.968313 | TRUST_REDUCED | User: teacher | Reason: RATE_LIMIT | 60 -> 50 | Violations: 4
+2026-02-27 22:09:06.983092 | User teacher logged out
+2026-02-27 22:09:09.332097 | OTP 743527 sent to lol@gmail.com
+2026-02-27 22:09:09.332622 | teacher initiated login, OTP sent
+2026-02-27 22:09:54.139314 | TRUST_REDUCED | User: teacher | Reason: RATE_LIMIT | 55 -> 45 | Violations: 1
+2026-02-27 22:09:54.158354 | TRUST_REDUCED | User: teacher | Reason: RATE_LIMIT | 45 -> 35 | Violations: 2
+2026-02-27 22:09:59.657254 | TRUST_REDUCED | User: teacher | Reason: RATE_LIMIT | 35 -> 25 | Violations: 3
+2026-02-27 22:09:59.674122 | User teacher logged out
+2026-02-27 22:10:03.484623 | OTP 245261 sent to admin@portal.com
+2026-02-27 22:10:03.485132 | admin initiated login, OTP sent
+2026-02-27 22:10:15.364690 | TRUST_RESET | User: admin | Reset by Admin: admin | 65 -> 100
+2026-02-27 22:10:16.831531 | TRUST_RESET | User: alan | Reset by Admin: admin | 95 -> 100
+2026-02-27 22:10:18.505813 | TRUST_RESET | User: teacher | Reset by Admin: admin | 25 -> 100
+2026-02-27 22:10:20.707170 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 100 -> 90 | Violations: 1
+2026-02-27 22:10:23.320198 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 90 -> 80 | Violations: 2
+2026-02-27 22:10:23.324689 | TRUST_RESET | User: admin | Reset by Admin: admin | 80 -> 100
+2026-02-27 22:10:23.342070 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 100 -> 90 | Violations: 3
+2026-02-27 22:10:25.912755 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 90 -> 80 | Violations: 4
+2026-02-27 22:10:25.926628 | User admin logged out
+2026-02-27 22:10:33.283902 | OTP 416519 sent to alansuresh2004@gmail.com
+2026-02-27 22:10:33.284477 | alan initiated login, OTP sent
+2026-02-27 22:11:45.946707 | User alan logged out
+2026-02-27 22:11:50.869651 | OTP 387014 sent to lol@gmail.com
+2026-02-27 22:11:50.870180 | teacher initiated login, OTP sent
+2026-02-27 22:12:33.370211 | Announcement posted by faculty 3
+2026-02-27 22:12:40.562047 | TRUST_REDUCED | User: teacher | Reason: RATE_LIMIT | 100 -> 90 | Violations: 1
+2026-02-27 22:12:48.816282 | TRUST_REDUCED | User: teacher | Reason: RATE_LIMIT | 90 -> 80 | Violations: 2
+2026-02-27 22:12:52.166803 | TRUST_REDUCED | User: teacher | Reason: RATE_LIMIT | 80 -> 70 | Violations: 3
+2026-02-27 22:12:58.395134 | TRUST_REDUCED | User: teacher | Reason: RATE_LIMIT | 70 -> 60 | Violations: 4
+2026-02-27 22:12:58.410748 | User teacher logged out
+2026-02-27 22:13:01.483997 | OTP 569399 sent to admin@portal.com
+2026-02-27 22:13:01.484577 | admin initiated login, OTP sent
+2026-02-27 22:13:11.172607 | TRUST_RESET | User: admin | Reset by Admin: admin | 85 -> 100
+2026-02-27 22:13:12.482288 | TRUST_RESET | User: teacher | Reset by Admin: admin | 60 -> 100
+2026-02-27 22:18:27.896177 | User admin logged out
+2026-02-27 22:22:04.800198 | OTP 588073 sent to admin@portal.com
+2026-02-27 22:22:04.803171 | admin initiated login, OTP sent
+2026-02-27 22:22:41.608458 | User admin logged out
+2026-02-27 22:22:53.523363 | Failed login attempt for alan
+2026-02-27 22:23:07.503792 | Failed login attempt for alan
+2026-02-27 22:23:34.377471 | Failed login attempt for alan
+2026-02-27 22:24:00.020275 | OTP 987949 sent to admin@portal.com
+2026-02-27 22:24:00.023843 | admin initiated login, OTP sent
+2026-02-27 22:26:33.950606 | OTP 664812 sent to admin@portal.com
+2026-02-27 22:26:33.951515 | admin initiated login, OTP sent
+2026-02-27 22:27:11.358093 | Admin added user aparna
+2026-02-27 22:27:20.272145 | User admin logged out
+2026-02-27 22:27:24.066239 | OTP 751115 sent to alansuresh2004@gmail.com
+2026-02-27 22:27:24.068662 | alan initiated login, OTP sent
+2026-02-27 22:27:31.583639 | User alan logged out
+2026-02-27 22:27:34.888341 | OTP 686334 sent to alansuresh2004@gmail.com
+2026-02-27 22:27:34.888981 | alan initiated login, OTP sent
+2026-02-27 22:27:53.316323 | User alan logged out
+2026-02-27 22:27:55.699290 | OTP 866986 sent to admin@portal.com
+2026-02-27 22:27:55.700470 | admin initiated login, OTP sent
+2026-02-27 22:28:10.310475 | TRUST_RESET | User: alan | Reset by Admin: admin | 30 -> 100
+2026-02-27 22:29:19.795585 | User admin logged out
+2026-02-27 22:29:22.630751 | OTP 950722 sent to alansuresh2004@gmail.com
+2026-02-27 22:29:22.631395 | alan initiated login, OTP sent
+2026-02-27 22:29:54.430953 | TRUST_REDUCED | User: alan | Path: /admin/users/add | 100 -> 85 | Reason: RBAC_VIOLATION
+2026-02-27 22:29:58.331320 | TRUST_REDUCED | User: alan | Path: /admin/users/add | 85 -> 70 | Reason: RBAC_VIOLATION
+2026-02-27 22:30:00.268576 | TRUST_REDUCED | User: alan | Reason: RATE_LIMIT | 70 -> 60 | Violations: 1
+2026-02-27 22:30:00.273756 | TRUST_REDUCED | User: alan | Path: /admin/users/add | 60 -> 45 | Reason: RBAC_VIOLATION
+2026-02-27 22:30:00.291723 | TRUST_REDUCED | User: alan | Reason: RATE_LIMIT | 45 -> 35 | Violations: 2
+2026-02-27 22:30:03.852232 | TRUST_REDUCED | User: alan | Reason: RATE_LIMIT | 35 -> 25 | Violations: 3
+2026-02-27 22:30:03.876529 | User alan logged out
+2026-02-27 22:30:05.942337 | OTP 250562 sent to alansuresh2004@gmail.com
+2026-02-27 22:30:05.942911 | alan initiated login, OTP sent
+2026-02-27 22:30:21.941287 | User alan logged out
+2026-02-27 22:30:23.416289 | OTP 166465 sent to alansuresh2004@gmail.com
+2026-02-27 22:30:23.417115 | alan initiated login, OTP sent
+2026-02-27 22:53:36.531216 | OTP 510079 sent to alansuresh2004@gmail.com
+2026-02-27 22:53:36.533876 | alan initiated login, OTP sent
+2026-02-28 00:10:35.691291 | OTP 988781 sent to alansuresh2004@gmail.com
+2026-02-28 00:10:35.693060 | alan initiated login, OTP sent
+2026-02-28 00:10:42.387593 | SECURITY_ALERT | User alan sent PUBLIC admin alert for access restriction
+2026-02-28 00:10:46.954218 | OTP 514287 sent to admin@portal.com
+2026-02-28 00:10:46.954798 | admin initiated login, OTP sent
+2026-02-28 00:57:58.163409 | Behavior log auto-reset for admin
+2026-02-28 00:57:58.250770 | User admin logged out
+2026-02-28 00:58:05.201564 | SECURITY_ALERT | User alan sent PUBLIC admin alert for access restriction
+2026-02-28 00:58:14.352551 | OTP email sent to admin@portal.com
+2026-02-28 00:58:14.353748 | admin initiated login, OTP sent
+2026-02-28 00:58:15.521092 | OTP email sent to admin@portal.com
+2026-02-28 00:58:15.522422 | admin initiated login, OTP sent
+2026-02-28 00:59:10.007991 | TRUST_RESET | User: alan | Reset by Admin: admin | -10 -> 100
+2026-02-28 00:59:21.542861 | User admin logged out
+2026-02-28 00:59:28.940062 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 00:59:28.940867 | alan initiated login, OTP sent
+2026-02-28 00:59:29.990974 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 00:59:29.991904 | alan initiated login, OTP sent
+2026-02-28 00:59:50.463898 | SECURITY_ALERT | User alan sent PUBLIC admin alert for access restriction
+2026-02-28 00:59:58.438901 | OTP email sent to admin@portal.com
+2026-02-28 00:59:58.439909 | admin initiated login, OTP sent
+2026-02-28 01:00:35.965233 | TRUST_RESET | User: alan | Reset by Admin: admin | 90 -> 100
+2026-02-28 01:00:42.437045 | User admin logged out
+2026-02-28 01:16:09.389807 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 01:16:09.390796 | alan initiated login, OTP sent
+2026-02-28 01:17:10.880499 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 01:17:10.881385 | alan initiated login, OTP sent
+2026-02-28 01:17:11.556648 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 01:17:11.557501 | alan initiated login, OTP sent
+2026-02-28 01:22:24.467662 | User alan logged out
+2026-02-28 01:22:32.211267 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 01:22:32.212079 | admin initiated login, OTP sent
+2026-02-28 01:23:23.012168 | Admin added user suresh
+2026-02-28 01:28:16.610187 | Admin deleted user suresh
+2026-02-28 01:28:19.119130 | Admin deleted user aparna
+2026-02-28 01:34:27.010961 | Behavior log auto-reset for admin
+2026-02-28 01:34:27.028025 | User admin logged out
+2026-02-28 01:37:35.182344 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 01:37:35.183226 | alan initiated login, OTP sent
+2026-02-28 01:37:36.173655 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 01:37:36.174522 | alan initiated login, OTP sent
+2026-02-28 01:37:37.984102 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 01:37:37.985014 | alan initiated login, OTP sent
+2026-02-28 01:38:12.000369 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 01:38:12.001227 | alan initiated login, OTP sent
+2026-02-28 01:38:12.769821 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 01:38:12.770665 | alan initiated login, OTP sent
+2026-02-28 02:06:24.038888 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 02:06:24.039757 | alan initiated login, OTP sent
+2026-02-28 02:15:01.349203 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 02:15:01.350121 | alan initiated login, OTP sent
+2026-02-28 02:17:15.004111 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 02:17:15.005235 | alan initiated login, OTP sent
+2026-02-28 02:20:04.150902 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 02:20:04.151818 | alan initiated login, OTP sent
+2026-02-28 02:22:11.824898 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 02:22:11.825757 | alan initiated login, OTP sent
+2026-02-28 02:25:25.881146 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 02:25:25.881972 | alan initiated login, OTP sent
+2026-02-28 02:27:15.621567 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 02:27:15.622426 | alan initiated login, OTP sent
+2026-02-28 11:03:11.027835 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 11:03:11.029010 | alan initiated login, OTP sent
+2026-02-28 11:03:39.802902 | ANOMALY_DETECTED | User: alan | Type: TIME_OF_DAY | Unusual login time: 11:00 (Typical: 2:00)
+2026-02-28 11:04:19.166841 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 11:04:19.167867 | admin initiated login, OTP sent
+2026-02-28 11:05:18.365131 | ANOMALY_DETECTED | User: admin | Type: TIME_OF_DAY | Unusual login time: 11:00 (Typical: 22:00)
+2026-02-28 11:13:31.147027 | Admin added student user: aparna (Roll: 2024-CS-0006)
+2026-02-28 11:13:36.602224 | Admin deleted user aparna
+2026-02-28 11:23:39.319972 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 11:23:39.321266 | alan initiated login, OTP sent
+2026-02-28 11:24:01.421288 | ANOMALY_DETECTED | User: alan | Type: TIME_OF_DAY | Unusual login time: 11:00 (Typical: 2:00)
+2026-02-28 11:24:43.201950 | Behavior log auto-reset for admin
+2026-02-28 11:24:54.675638 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 11:24:54.676614 | alan initiated login, OTP sent
+2026-02-28 11:25:14.816631 | ANOMALY_DETECTED | User: alan | Type: TIME_OF_DAY | Unusual login time: 11:00 (Typical: 2:00)
+2026-02-28 11:25:36.764903 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 11:25:36.765758 | admin initiated login, OTP sent
+2026-02-28 11:25:55.292123 | ANOMALY_DETECTED | User: admin | Type: TIME_OF_DAY | Unusual login time: 11:00 (Typical: 22:00)
+2026-02-28 11:25:59.579011 | Failed login attempt for admin
+2026-02-28 11:28:51.635713 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 11:28:51.637213 | admin initiated login, OTP sent
+2026-02-28 11:29:27.175793 | ANOMALY_DETECTED | User: admin | Type: TIME_OF_DAY | Unusual login time: 11:00 (Typical: 22:00)
+2026-02-28 11:29:32.420552 | TRUST_RESET | User: admin | Reset by Admin: admin | 75 -> 100
+2026-02-28 11:29:33.940275 | TRUST_RESET | User: alan | Reset by Admin: admin | 60 -> 100
+2026-02-28 11:35:57.012425 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 11:35:57.013371 | admin initiated login, OTP sent
+2026-02-28 11:36:07.231660 | ANOMALY_DETECTED | User: admin | Type: TIME_OF_DAY | Unusual login time: 11:00 (Typical: 22:00)
+2026-02-28 11:39:10.937075 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 11:39:10.938420 | admin initiated login, OTP sent
+2026-02-28 11:39:23.906351 | ANOMALY_DETECTED | User: admin | Type: TIME_OF_DAY | Unusual login time: 11:00 (Typical: 22:00)
+2026-02-28 11:52:28.008638 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 11:52:28.010312 | admin initiated login, OTP sent
+2026-02-28 11:52:37.590949 | ANOMALY_DETECTED | User: admin | Type: TIME_OF_DAY | Unusual login time: 11:00 (Typical: 22:00)
+2026-02-28 11:53:34.849917 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 11:53:34.850957 | admin initiated login, OTP sent
+2026-02-28 11:53:48.835194 | ANOMALY_DETECTED | User: admin | Type: TIME_OF_DAY | Unusual login time: 11:00 (Typical: 22:00)
+2026-02-28 11:57:42.846148 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 11:57:42.847474 | admin initiated login, OTP sent
+2026-02-28 11:58:08.758654 | TRUST_RESET | User: admin | Reset by Admin: admin | 60 -> 100
+2026-02-28 11:58:12.564900 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 100 -> 90 | Violations: 1
+2026-02-28 11:58:17.480791 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 90 -> 80 | Violations: 2
+2026-02-28 12:01:23.019514 | Admin added student user: abc (Roll: 2024-CS-0007)
+2026-02-28 12:01:30.376913 | Admin deleted user abc
+2026-02-28 12:01:33.261882 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 80 -> 70 | Violations: 3
+2026-02-28 12:06:35.451740 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 12:06:35.452656 | admin initiated login, OTP sent
+2026-02-28 12:07:43.828794 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 12:07:43.829628 | admin initiated login, OTP sent
+2026-02-28 12:15:51.743406 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 80 -> 70 | Violations: 1
+2026-02-28 12:15:51.747715 | Admin deleted user teacher
+2026-02-28 12:15:51.769333 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 70 -> 60 | Violations: 2
+2026-02-28 12:15:53.542229 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 60 -> 50 | Violations: 3
+2026-02-28 12:15:53.546243 | Admin deleted user alan
+2026-02-28 12:15:53.567931 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 50 -> 40 | Violations: 4
+2026-02-28 12:16:00.941821 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 12:16:00.942662 | admin initiated login, OTP sent
+2026-02-28 12:17:40.596918 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 12:17:40.597789 | admin initiated login, OTP sent
+2026-02-28 12:19:07.737450 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 12:19:07.738277 | admin initiated login, OTP sent
+2026-02-28 12:24:50.475321 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 12:24:50.476751 | admin initiated login, OTP sent
+2026-02-28 12:27:12.782093 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 12:27:12.783869 | admin initiated login, OTP sent
+2026-02-28 12:27:32.488842 | TRUST_RESET | User: admin | Reset by Admin: admin | 65 -> 100

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}System Logs{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <div class="dashboard-header">
+        <h1>Access Logs</h1>
+         <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+            ← Back to Dashboard
+        </a>
+    </div>
+
+    <div class="card table-container">
+        <table>
+            <tr>
+                <th>User</th>
+                <th>Action</th>
+                <th>IP</th>
+                <th>Time</th>
+            </tr>
+            {% for log in logs %}
+            <tr>
+                <td>{{ log.username or 'System' }}</td>
+                <td>{{ log.action }}</td>
+                <td>{{ log.ip }}</td>
+                <td>{{ log.timestamp }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock %}
