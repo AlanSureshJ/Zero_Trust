@@ -646,11 +646,11 @@ def is_behavior_unusual():
     now = datetime.now().timestamp()
     recent_actions = [l for l in logs if now - l["timestamp"] < 60]
     
-    if len(recent_actions) > 10:
+    if len(recent_actions) > 30:
         return True
     
     toggle_count = sum(1 for l in recent_actions if l["action"] == "toggle_readonly")
-    if toggle_count > 2:
+    if toggle_count > 5:
         return True
     
     return False
@@ -756,7 +756,7 @@ def rate_limit(f):
                 log_action(f"ERROR reducing trust score for rate limit for user {user_id}: {e}")
             
             # Block access if too many violations (>3 in this session)
-            if session["rate_limit_violations"] > 3:
+            if session["rate_limit_violations"] > 7:
                 session["logout_reason"] = f"Security Alert: Excessive requests. Trust score reduced to {new_trust}."
                 return redirect(url_for("logout"))
             
@@ -879,7 +879,7 @@ def login_required(f):
                 log_action(f"ERROR reducing trust score for rate limit for user {user_id}: {e}")
             
             # Block access if too many violations (>3 in this session)
-            if session["rate_limit_violations"] > 3:
+            if session["rate_limit_violations"] > 7:
                 flash(f"⛔ Too many requests! Your account has been temporarily restricted. Trust score: {new_trust}", "danger")
                 return redirect(url_for("logout"))
             
@@ -892,7 +892,7 @@ def login_required(f):
         last_activity = session.get("last_activity")
         if last_activity:
             last_dt = datetime.fromisoformat(last_activity)
-            if (datetime.utcnow() - last_dt).seconds > IDLE_TIMEOUT_SECONDS:
+            if (datetime.utcnow() - last_dt).total_seconds() > IDLE_TIMEOUT_SECONDS:
                 uid = session.get("user_id")
                 conn = get_db()
                 if uid:
@@ -1105,7 +1105,19 @@ def login():
         if (user["trust_score"] or 100) < 25:
             flash("Access Restricted: Your trust score is too low. Please contact admin.", "danger")
             return render_template("login.html", can_contact_admin=True, restricted_user=username)
-        
+        if user["active_session"]:
+            # ✅ FIX: Check if the session is actually stale (no real active session)
+            # Force clear if last_login was more than 2 hours ago (session expired naturally)
+            last_login = user["last_login"]
+            if last_login:
+                try:
+                    last_dt = datetime.fromisoformat(last_login)
+                    if (datetime.utcnow() - last_dt).total_seconds() > 7200:  # 2 hours = session lifetime
+                        conn.execute("UPDATE users SET active_session=0 WHERE id=?", (user["id"],))
+                        conn.commit()
+                        user = conn.execute("SELECT * FROM users WHERE id=?", (user["id"],)).fetchone()
+                except:
+                    pass
         if user["active_session"]:
             flash("Already logged in from another device. Please logout first.", "danger")
             return render_template("login.html")
@@ -1472,6 +1484,7 @@ def verify_otp():
 @app.route('/logout')
 def logout():
     uid = session.get("user_id")
+    username = session.get("username")
     reason = session.get("logout_reason")
     conn = get_db()
     if uid:
@@ -1485,6 +1498,8 @@ def logout():
                 write_access_log(conn, uid, "logout", "user", None, True, "logout")
         conn.commit()
         log_action(f"User {session.get('username')} logged out")
+    elif username:
+        conn.execute("UPDATE users SET active_session=0 WHERE username=?", (username,))
     
     session.clear()
     if reason:
@@ -1801,16 +1816,17 @@ def parent_marks():
     student = conn.execute("SELECT s.*, u.name as student_name FROM students s JOIN users u ON s.user_id=u.id WHERE s.id=?",
                           (parent["student_id"],)).fetchone()
     
-    marks = {}
-    if student and student['marks']:
-        for m in student['marks'].split(","):
-            parts = m.split(":")
-            if len(parts) == 2:
-                marks[parts[0]] = parts[1]
-    
+    detailed_marks = conn.execute("""
+        SELECT m.*, u.name as faculty_name
+        FROM marks m
+        LEFT JOIN users u ON m.entered_by = u.id
+        WHERE m.student_id=?
+        ORDER BY m.entered_at DESC
+    """, (student["id"] if student else 0,)).fetchall()
+
     track_behavior("parent_view_marks")
     write_access_log(conn, uid, "parent_view_marks", "student", student["id"] if student else None, True, "ok")
-    return render_template("parent/marks.html", marks=marks, student=student)
+    return render_template("parent/marks.html", detailed_marks=detailed_marks, student=student)
 
 @app.route('/parent/attendance')
 @login_required
@@ -1826,14 +1842,26 @@ def parent_attendance():
     
     student = conn.execute("SELECT s.*, u.name as student_name FROM students s JOIN users u ON s.user_id=u.id WHERE s.id=?",
                           (parent["student_id"],)).fetchone()
-    
-    attendance_records = conn.execute("""SELECT * FROM attendance WHERE student_id=? ORDER BY date DESC LIMIT 30""",
-                                      (student["id"] if student else 0,)).fetchall()
-    
+
+    attendance_records = conn.execute("""
+        SELECT a.*, u.name as faculty_name
+        FROM attendance a
+        LEFT JOIN users u ON a.marked_by = u.id
+        WHERE a.student_id=?
+        ORDER BY a.date DESC LIMIT 30
+    """, (student["id"] if student else 0,)).fetchall()
+
+    total = len(attendance_records)
+    present = sum(1 for r in attendance_records if r['status'] == 'present')
+    absent = sum(1 for r in attendance_records if r['status'] == 'absent')
+    percentage = round(present / total * 100, 1) if total > 0 else 0
+
     track_behavior("parent_view_attendance")
     write_access_log(conn, uid, "parent_view_attendance", "student", student["id"] if student else None, True, "ok")
-    return render_template("parent/attendance.html", attendance=student['attendance'] if student else "", 
-                          records=attendance_records, student=student)
+    return render_template("parent/attendance.html",
+                           records=attendance_records,
+                           stats={'total': total, 'present': present, 'absent': absent, 'percentage': percentage},
+                           student=student)
 
 @app.route('/parent/fees')
 @login_required
@@ -2050,7 +2078,6 @@ def faculty_announcements(readonly=False):
     conn = get_db()
     
     track_behavior("faculty_announcements")
-    update_trust()
     
     if is_behavior_unusual():
         flash("Unusual behavior detected. Some actions are temporarily restricted.", "warning")
@@ -2103,7 +2130,6 @@ def admin_users():
     users = conn.execute("SELECT * FROM users ORDER BY role, name").fetchall()
     
     track_behavior("admin_users")
-    update_trust()
     write_access_log(conn, session["user_id"], "view_users", "admin", None, True, "ok")
     
     return render_template("admin/users.html", users=users, trust_score=session.get("trust_score", 100))
@@ -2403,7 +2429,6 @@ def admin_toggle_readonly():
     global READ_ONLY_MODE
     
     track_behavior("toggle_readonly")
-    update_trust()
     
     if is_behavior_unusual():
         update_trust("suspicious")

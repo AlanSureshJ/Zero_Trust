@@ -4,34 +4,36 @@
 {% block content %}
 <div class="dashboard">
     <div class="dashboard-header">
-        <h1> Attendance</h1>
+        <h1>Attendance</h1>
         <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">← Back to Dashboard</a>
     </div>
 
+    {% if student %}
     <div class="student-info-card">
         <div class="student-avatar"></div>
         <div class="student-details">
-            <h2>John Doe</h2>
-            <p><strong>Roll No:</strong> CS2024001</p>
-            <p><strong>Class:</strong> B.Tech CSE - 3rd Year</p>
+            <h2>{{ student.student_name }}</h2>
+            <p><strong>Roll No:</strong> {{ student.roll_number or 'N/A' }}</p>
+            <p><strong>Department:</strong> {{ student.department or 'N/A' }}</p>
         </div>
     </div>
+    {% endif %}
 
     <div class="stats-grid">
-        <div class="stat-card {% if 87 >= 75 %}stat-success{% else %}stat-danger{% endif %}">
+        <div class="stat-card {% if stats.percentage >= 75 %}stat-success{% else %}stat-danger{% endif %}">
             <div class="stat-icon"></div>
-            <div class="stat-value">87%</div>
+            <div class="stat-value">{{ stats.percentage }}%</div>
             <div class="stat-label">Overall Attendance</div>
         </div>
         <div class="stat-card">
             <div class="stat-icon"></div>
-            <div class="stat-value">78</div>
-            <div class="stat-label">Days Present</div>
+            <div class="stat-value">{{ stats.present }}</div>
+            <div class="stat-label">Classes Attended</div>
         </div>
         <div class="stat-card">
             <div class="stat-icon"></div>
-            <div class="stat-value">12</div>
-            <div class="stat-label">Days Absent</div>
+            <div class="stat-value">{{ stats.absent }}</div>
+            <div class="stat-label">Classes Missed</div>
         </div>
         <div class="stat-card">
             <div class="stat-icon"></div>
@@ -42,94 +44,7 @@
 
     <div class="card">
         <div class="card-header">
-            <h2>Subject-wise Attendance</h2>
-        </div>
-        <div class="card-body">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Subject</th>
-                        <th>Faculty</th>
-                        <th>Classes Held</th>
-                        <th>Attended</th>
-                        <th>Percentage</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Data Structures</td>
-                        <td>Dr. Smith</td>
-                        <td>20</td>
-                        <td>18</td>
-                        <td>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 90%;"></div>
-                                <span class="progress-text">90%</span>
-                            </div>
-                        </td>
-                        <td><span class="status-badge status-pass">Good</span></td>
-                    </tr>
-                    <tr>
-                        <td>Database Management</td>
-                        <td>Prof. Johnson</td>
-                        <td>18</td>
-                        <td>16</td>
-                        <td>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 89%;"></div>
-                                <span class="progress-text">89%</span>
-                            </div>
-                        </td>
-                        <td><span class="status-badge status-pass">Good</span></td>
-                    </tr>
-                    <tr>
-                        <td>Operating Systems</td>
-                        <td>Dr. Williams</td>
-                        <td>15</td>
-                        <td>12</td>
-                        <td>
-                            <div class="progress-bar">
-                                <div class="progress-fill warning" style="width: 80%;"></div>
-                                <span class="progress-text">80%</span>
-                            </div>
-                        </td>
-                        <td><span class="status-badge status-warning">Average</span></td>
-                    </tr>
-                    <tr>
-                        <td>Computer Networks</td>
-                        <td>Prof. Brown</td>
-                        <td>16</td>
-                        <td>14</td>
-                        <td>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 88%;"></div>
-                                <span class="progress-text">88%</span>
-                            </div>
-                        </td>
-                        <td><span class="status-badge status-pass">Good</span></td>
-                    </tr>
-                    <tr>
-                        <td>Discrete Mathematics</td>
-                        <td>Dr. Davis</td>
-                        <td>9</td>
-                        <td>7</td>
-                        <td>
-                            <div class="progress-bar">
-                                <div class="progress-fill warning" style="width: 78%;"></div>
-                                <span class="progress-text">78%</span>
-                            </div>
-                        </td>
-                        <td><span class="status-badge status-warning">At Risk</span></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-header">
-            <h2>Recent Absences</h2>
+            <h2>Recent Attendance Records</h2>
         </div>
         <div class="card-body">
             <table class="data-table">
@@ -137,36 +52,38 @@
                     <tr>
                         <th>Date</th>
                         <th>Subject</th>
-                        <th>Period</th>
-                        <th>Reason</th>
+                        <th>Status</th>
+                        <th>Marked By</th>
                     </tr>
                 </thead>
                 <tbody>
+                    {% for record in records %}
                     <tr>
-                        <td>Dec 18, 2024</td>
-                        <td>Operating Systems</td>
-                        <td>3rd Period</td>
-                        <td>Medical Leave</td>
+                        <td>{{ record.date }}</td>
+                        <td>{{ record.subject or 'N/A' }}</td>
+                        <td>
+                            {% if record.status == 'present' %}
+                            <span class="status-badge status-pass">Present</span>
+                            {% elif record.status == 'absent' %}
+                            <span class="status-badge status-fail">Absent</span>
+                            {% else %}
+                            <span class="status-badge status-warning">Late</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ record.faculty_name or 'N/A' }}</td>
                     </tr>
+                    {% else %}
                     <tr>
-                        <td>Dec 15, 2024</td>
-                        <td>Discrete Mathematics</td>
-                        <td>5th Period</td>
-                        <td>Not Specified</td>
+                        <td colspan="4" style="text-align: center;">No attendance records found.</td>
                     </tr>
-                    <tr>
-                        <td>Dec 10, 2024</td>
-                        <td>Database Management</td>
-                        <td>2nd Period</td>
-                        <td>College Event</td>
-                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
 
     <div class="alert alert-info">
-        <strong>ℹ️ Note:</strong> If your child's attendance falls below 75%, they may not be eligible to appear for exams. Please ensure regular attendance.
+        <strong>&#8505;&#65039; Note:</strong> If your child's attendance falls below 75%, they may not be eligible to appear for exams. Please ensure regular attendance.
     </div>
 </div>
 {% endblock %}
