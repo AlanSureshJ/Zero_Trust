@@ -476,3 +476,111 @@
 2026-02-28 12:27:12.782093 | OTP email sent to alansuresh2004@gmail.com
 2026-02-28 12:27:12.783869 | admin initiated login, OTP sent
 2026-02-28 12:27:32.488842 | TRUST_RESET | User: admin | Reset by Admin: admin | 65 -> 100
+2026-02-28 12:39:05.017933 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 12:39:05.019033 | admin initiated login, OTP sent
+2026-02-28 12:40:11.430897 | Admin added student user: alan (Roll: 2022-CS-0008)
+2026-02-28 12:40:14.177536 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 100 -> 90 | Violations: 1
+2026-02-28 12:40:15.585581 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 90 -> 80 | Violations: 2
+2026-02-28 12:41:33.576371 | Admin added parent user: suresh (Roll: N/A)
+2026-02-28 12:42:18.911281 | Admin added faculty user: john (Roll: N/A)
+2026-02-28 12:42:30.589554 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 80 -> 70 | Violations: 3
+2026-02-28 12:42:31.851521 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 70 -> 60 | Violations: 4
+2026-02-28 12:43:33.368868 | OTP email sent to u2203023@rajagiri.edu.in
+2026-02-28 12:43:33.369697 | john initiated login, OTP sent
+2026-02-28 12:46:29.499858 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 12:46:29.500751 | admin initiated login, OTP sent
+2026-02-28 12:46:48.501462 | TRUST_RESET | User: admin | Reset by Admin: admin | 65 -> 100
+2026-02-28 12:47:23.403987 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 100 -> 90 | Violations: 1
+2026-02-28 12:47:27.756977 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 90 -> 80 | Violations: 2
+2026-02-28 12:47:27.787029 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 80 -> 70 | Violations: 3
+2026-02-28 12:49:03.836255 | TRUST_RESET | User: admin | Reset by Admin: admin | 70 -> 100
+2026-02-28 12:49:20.475016 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 100 -> 90 | Violations: 4
+2026-02-28 12:49:27.566696 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 12:49:27.567611 | admin initiated login, OTP sent
+2026-02-28 12:49:56.975170 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 12:49:56.976053 | admin initiated login, OTP sent
+2026-02-28 12:55:17.210588 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 12:55:17.211443 | admin initiated login, OTP sent
+2026-02-28 12:55:46.534636 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 100 -> 90 | Violations: 1
+2026-02-28 12:55:57.015360 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 90 -> 80 | Violations: 2
+2026-02-28 12:56:08.017300 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 80 -> 70 | Violations: 3
+2026-02-28 12:56:08.039375 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 70 -> 60 | Violations: 4
+2026-02-28 12:59:48.171220 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 12:59:48.172564 | admin initiated login, OTP sent
+2026-02-28 13:00:10.909130 | TRUST_RESET | User: admin | Reset by Admin: admin | 65 -> 100
+2026-02-28 13:00:10.927906 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 100 -> 90 | Violations: 1
+2026-02-28 13:00:13.587859 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 90 -> 80 | Violations: 2
+2026-02-28 13:00:13.592705 | TRUST_RESET | User: admin | Reset by Admin: admin | 80 -> 100
+2026-02-28 13:00:13.625712 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 100 -> 90 | Violations: 3
+2026-02-28 13:00:15.818296 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 90 -> 80 | Violations: 4
+2026-02-28 13:00:15.822658 | TRUST_RESET | User: admin | Reset by Admin: admin | 80 -> 100
+2026-02-28 13:00:15.842052 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 100 -> 90 | Violations: 5
+2026-02-28 13:00:17.672727 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 90 -> 80 | Violations: 6
+2026-02-28 13:00:17.676188 | TRUST_RESET | User: admin | Reset by Admin: admin | 80 -> 100
+2026-02-28 13:00:17.695468 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 100 -> 90 | Violations: 7
+2026-02-28 13:01:05.734976 | OTP email sent to u2203023@rajagiri.edu.in
+2026-02-28 13:01:05.735914 | john initiated login, OTP sent
+2026-02-28 13:01:43.355672 | TRUST_REDUCED | User: john | Reason: RATE_LIMIT | 100 -> 90 | Violations: 1
+2026-02-28 13:01:55.232806 | TRUST_REDUCED | User: john | Reason: RATE_LIMIT | 90 -> 80 | Violations: 2
+2026-02-28 13:01:55.258954 | TRUST_REDUCED | User: john | Reason: RATE_LIMIT | 80 -> 70 | Violations: 3
+2026-02-28 13:32:56.855316 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 13:32:56.856861 | admin initiated login, OTP sent
+2026-02-28 13:34:02.745130 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 13:34:02.746337 | admin initiated login, OTP sent
+2026-02-28 13:34:16.130842 | TRUST_RESET | User: john | Reset by Admin: admin | 70 -> 100
+2026-02-28 13:39:04.758380 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 13:39:04.759473 | admin initiated login, OTP sent
+2026-02-28 13:41:20.478521 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 13:41:20.479587 | admin initiated login, OTP sent
+2026-02-28 13:44:16.859976 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 13:44:16.860887 | admin initiated login, OTP sent
+2026-02-28 13:45:06.153548 | OTP email sent to u2203023@rajagiri.edu.in
+2026-02-28 13:45:06.154412 | john initiated login, OTP sent
+2026-02-28 13:46:46.440361 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 13:46:46.441156 | alan initiated login, OTP sent
+2026-02-28 13:53:49.437799 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 13:53:49.438795 | admin initiated login, OTP sent
+2026-02-28 13:55:43.453500 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 13:55:43.454378 | admin initiated login, OTP sent
+2026-02-28 13:59:46.506813 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 13:59:46.507745 | admin initiated login, OTP sent
+2026-02-28 14:05:25.764693 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 14:05:25.765647 | admin initiated login, OTP sent
+2026-02-28 14:06:00.051850 | User admin logged out
+2026-02-28 14:06:19.094981 | OTP email sent to jacksmith538922363@gmail.com
+2026-02-28 14:06:19.096113 | suresh initiated login, OTP sent
+2026-02-28 14:07:39.473242 | User suresh logged out
+2026-02-28 14:07:45.787230 | OTP email sent to jacksmith538922363@gmail.com
+2026-02-28 14:07:45.788035 | suresh initiated login, OTP sent
+2026-02-28 14:07:50.095808 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 14:07:50.096717 | admin initiated login, OTP sent
+2026-02-28 14:08:23.286720 | TRUST_RESET | User: suresh | Reset by Admin: admin | 95 -> 100
+2026-02-28 14:08:29.622424 | User admin logged out
+2026-02-28 14:16:36.931080 | OTP email sent to jacksmith538922363@gmail.com
+2026-02-28 14:16:36.932336 | suresh initiated login, OTP sent
+2026-02-28 18:15:05.520070 | OTP email sent to jacksmith538922363@gmail.com
+2026-02-28 18:15:05.521385 | suresh initiated login, OTP sent
+2026-02-28 18:15:47.073072 | User suresh logged out
+2026-02-28 18:15:55.012879 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 18:15:55.013962 | admin initiated login, OTP sent
+2026-02-28 18:16:04.550207 | ANOMALY_DETECTED | User: admin | Type: TIME_OF_DAY | Unusual login time: 18:00 (Typical: 12:00)
+2026-02-28 18:16:14.691806 | TRUST_RESET | User: admin | Reset by Admin: admin | 90 -> 100
+2026-02-28 18:16:20.897188 | User admin logged out
+2026-02-28 18:16:39.670855 | OTP email sent to u2203023@rajagiri.edu.in
+2026-02-28 18:16:39.671838 | john initiated login, OTP sent
+2026-02-28 18:16:57.235366 | ANOMALY_DETECTED | User: john | Type: TIME_OF_DAY | Unusual login time: 18:00 (Typical: 13:00)
+2026-02-28 18:17:31.532365 | User john logged out
+2026-02-28 18:17:43.234618 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 18:17:43.235458 | alan initiated login, OTP sent
+2026-02-28 18:17:58.077402 | ANOMALY_DETECTED | User: alan | Type: TIME_OF_DAY | Unusual login time: 18:00 (Typical: 13:00)
+2026-02-28 18:19:22.991925 | User alan logged out
+2026-02-28 18:19:29.294697 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 18:19:29.295550 | alan initiated login, OTP sent
+2026-02-28 18:19:37.619766 | OTP email sent to alansuresh2004@gmail.com
+2026-02-28 18:19:37.620612 | admin initiated login, OTP sent
+2026-02-28 18:19:55.791031 | ANOMALY_DETECTED | User: admin | Type: TIME_OF_DAY | Unusual login time: 18:00 (Typical: 12:00)
+2026-02-28 18:20:07.794939 | TRUST_RESET | User: admin | Reset by Admin: admin | 85 -> 100
+2026-02-28 18:20:09.058516 | TRUST_RESET | User: alan | Reset by Admin: admin | 90 -> 100
+2026-02-28 18:20:10.471587 | TRUST_RESET | User: john | Reset by Admin: admin | 85 -> 100
+2026-02-28 18:20:15.638980 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 100 -> 90 | Violations: 1
+2026-02-28 18:20:16.120920 | TRUST_REDUCED | User: admin | Reason: RATE_LIMIT | 90 -> 80 | Violations: 2

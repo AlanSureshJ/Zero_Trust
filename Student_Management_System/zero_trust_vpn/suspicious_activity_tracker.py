@@ -12,7 +12,7 @@ request_timestamps = defaultdict(list)
 MAX_FAILED_LOGINS = 5
 MAX_FAILED_OTPS = 3
 MAX_RBAC_VIOLATIONS = 3
-MAX_REQUESTS_PER_10_SEC = 3
+MAX_REQUESTS_PER_10_SEC = 7
 
 def record_failed_login(username):
     failed_logins[username] += 1

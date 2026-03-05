@@ -43,15 +43,37 @@ except ImportError:
 # In-memory trust store
 trust_scores = {}
 
+# Paths that are always allowed regardless of role
+PUBLIC_PATHS = [
+    "/logout",
+    "/login",
+    "/",
+    "/static",
+    "/restricted",
+    "/request-admin-help",
+    "/self-service-verify",
+    "/confirm-recovery",
+    "/public-request-help",
+    "/verify_otp",
+    "/dashboard",
+]
+
 # RBAC policy
 POLICY = {
     "student": ["/student", "/dashboard"],
     "parent":  ["/parent",  "/dashboard"],
     "faculty": ["/faculty", "/dashboard"],
-    "admin":   ["/admin",   "/dashboard"],
+    "admin":   ["/admin",   "/faculty",  "/dashboard"],  # admin can access faculty routes too
 }
 
 BASE_TRUST = 100
+
+# How many points to deduct per RBAC violation
+RBAC_PENALTY = 5  # was 15 — too aggressive
+
+# Trust threshold below which session is terminated
+TERMINATE_THRESHOLD = 10  # was 40 — way too aggressive
+
 
 def allowed(role, path):
     for allowed_path in POLICY.get(role, []):
@@ -102,14 +124,21 @@ def handle_client(conn, addr):
         trust_scores.setdefault(username, BASE_TRUST)
         trust = trust_scores[username]
 
-        # Low trust → terminate session
-        if trust < 40:
+        # ─── Always allow public/utility paths ──────────────────────────────
+        if any(path.startswith(p) for p in PUBLIC_PATHS):
+            log_vpn_decision(username, role, path, "ALLOW_PUBLIC", trust)
+            conn.sendall(f"ALLOWED:{path}".encode())
+            return
+
+        # ─── Low trust → terminate session ──────────────────────────────────
+        if trust < TERMINATE_THRESHOLD:
+            log_suspicious(username, "Trust critically low", f"Trust={trust}")
             conn.sendall(b"SESSION_TERMINATED_LOW_TRUST")
             return
 
-        # RBAC violation
+        # ─── RBAC check ─────────────────────────────────────────────────────
         if not allowed(role, path):
-            trust_scores[username] -= 15
+            trust_scores[username] = max(0, trust_scores[username] - RBAC_PENALTY)
             trust = trust_scores[username]
 
             response = json.dumps({
@@ -123,7 +152,7 @@ def handle_client(conn, addr):
             conn.sendall(response.encode())
             return
 
-        # Allowed
+        # ─── Allowed ────────────────────────────────────────────────────────
         log_vpn_decision(username, role, path, "ALLOW", trust)
         conn.sendall(f"ALLOWED:{path}".encode())
 
