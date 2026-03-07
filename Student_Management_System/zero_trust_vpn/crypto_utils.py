@@ -17,6 +17,8 @@ Flow (VPN Server decryption):
 
 import os
 import struct
+import time
+import json
 from cryptography.hazmat.primitives.asymmetric import padding as asym_padding
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
@@ -77,9 +79,6 @@ def rsa_decrypt(ciphertext: bytes, private_key) -> bytes:
 
 # ─── Tunnel Wire Format ───────────────────────────────────────────────────────
 # Wire format: [4 bytes: len(enc_aes_key)] [enc_aes_key] [16 bytes: iv] [aes_ciphertext]
-
-import time
-import json
 
 def encrypt_payload(plaintext: str, public_key) -> bytes:
     """Encrypt a plaintext string for transmission over the VPN tunnel socket."""

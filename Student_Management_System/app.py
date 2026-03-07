@@ -25,6 +25,10 @@ from email.mime.multipart import MIMEMultipart
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from base64 import b64decode
 import sys
+import io
+import base64
+import pyotp
+import qrcode
 
 # Add zero_trust_vpn to path for logger import
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "zero_trust_vpn"))
@@ -629,43 +633,8 @@ def should_trigger_mfa(conn, user_row, device_id):
     return False
 
 def send_otp_email(email, otp):
-    """Send OTP via real SMTP email service"""
-    subject = "Your College Portal Login OTP"
-    body = f"""
-    <html>
-    <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-        <div style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;">
-            <h2 style="color: #007bff; text-align: center;">College Portal Security</h2>
-            <p>Hello,</p>
-            <p>Your one-time password (OTP) for logging into the <strong>College Portal</strong> is:</p>
-            <div style="text-align: center; margin: 30px 0; padding: 20px; background-color: #fff; border: 2px dashed #007bff; border-radius: 5px; font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #007bff;">
-                {otp}
-            </div>
-            <p>This code is valid for <strong>5 minutes</strong>. If you did not request this, please change your password immediately.</p>
-            <hr style="border: 0; border-top: 1px solid #ddd;">
-            <p style="font-size: 12px; color: #777; text-align: center;">Sent by College Portal Security System</p>
-        </div>
-    </body>
-    </html>
-    """
-    
-    msg = MIMEMultipart()
-    msg['From'] = SENDER_EMAIL
-    msg['To'] = email
-    msg['Subject'] = subject
-    msg.attach(MIMEText(body, 'html'))
-    
-    try:
-        context = ssl.create_default_context()
-        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
-            server.starttls(context=context)
-            server.login(SENDER_EMAIL, APP_PASSWORD)
-            server.send_message(msg)
-        print(f"[OTP] Real email sent to {email}")
-        log_action(f"OTP email sent to {email}")
-    except Exception as e:
-        print(f"[ERROR] Failed to send OTP email: {e}")
-        log_action(f"FAILED OTP EMAIL to {email}: {e}")
+    """Send OTP via real SMTP email service (Disabled for TOTP)"""
+    pass
 
 def detect_anomalies(user_id, current_ip):
     """Detect Time-of-Day and Impossible Travel anomalies"""
@@ -812,7 +781,8 @@ SAFE_ROUTES = {
     "parent_notices",
     "logout",
     "index",
-    "verify_otp"
+    "verify_otp",
+    "enroll_totp"
 }
 
 
@@ -1274,21 +1244,14 @@ def login():
             security_alert = "New device detected. Trust score reduced for security."
             flash("New device detected. Trust score reduced for security.","warning")
         
-        # Store pre-auth session
+        # Store pre-auth session variables
         session["pre_auth_user_id"] = user["id"]
         session["pre_auth_role"] = user["role"]
         session["pre_auth_username"] = user["username"]
         if security_alert:
             session["pre_auth_security_alert"] = security_alert
         
-        # Generate OTP
-        otp = f"{secrets.randbelow(1000000):06d}"
-        session["otp"] = otp
-        session["otp_expiry"] = (datetime.utcnow() + timedelta(minutes=5)).timestamp()
-        
-        send_otp_email(user["email"], otp)
-        flash("OTP sent to your registered email address.", "info")
-        log_action(f"{username} initiated login, OTP sent")
+        log_action(f"{username} initiated login, proceeding to TOTP")
         
         return redirect(url_for("verify_otp"))
     
@@ -1310,7 +1273,7 @@ VPN_PORT = 5012
 VPN_TIMEOUT = 3.0
 
 # Paths that bypass the VPN tunnel
-VPN_PUBLIC_PATHS = ["/login", "/verify_otp", "/public-request-help", "/static"]
+VPN_PUBLIC_PATHS = ["/login", "/verify_totp", "/public-request-help", "/static"]
 
 _VPN_PUBLIC_KEY_PATH = os.path.join(os.path.dirname(__file__), "zero_trust_vpn", "keys", "public.pem")
 try:
@@ -1531,19 +1494,37 @@ def verify_otp():
     conn = get_db()
     user = conn.execute("SELECT * FROM users WHERE id=?", (user_id,)).fetchone()
 
+    # --- Get or generate TOTP secret ---
+    totp_secret = None
+    try:
+        totp_secret = user["totp_secret"]
+    except (IndexError, KeyError):
+        pass
+
+    if not totp_secret:
+        totp_secret = pyotp.random_base32()
+        try:
+            conn.execute("UPDATE users SET totp_secret=? WHERE id=?", (totp_secret, user_id))
+            conn.commit()
+        except Exception as e:
+            print(f"[ERROR] Could not save TOTP secret: {e}")
+
+    # --- Generate QR code for the template ---
+    totp = pyotp.TOTP(totp_secret)
+    provisioning_uri = totp.provisioning_uri(name=user["email"], issuer_name="ZeroTrust Portal")
+    qr = qrcode.QRCode(version=1, box_size=8, border=3)
+    qr.add_data(provisioning_uri)
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="black", back_color="white")
+    buf = io.BytesIO()
+    img.save(buf)
+    qr_b64 = base64.b64encode(buf.getvalue()).decode("ascii")
+
     if request.method == "POST":
         code = request.form.get("otp", "").strip()
-        otp = session.get("otp")
-        expiry = session.get("otp_expiry", 0)
 
-        # OTP expired
-        if datetime.utcnow().timestamp() > expiry:
-            flash("OTP expired. Please login again.", "danger")
-            session.clear()
-            return redirect(url_for("login"))
-
-        # ✅ OTP SUCCESS
-        if code == otp:
+        # ✅ TOTP SUCCESS
+        if totp.verify(code):
             # 1. Detect Anomalies and Calculate Trust
             current_ip = request.remote_addr or "127.0.0.1"
             username = session.get("pre_auth_username")
@@ -1630,7 +1611,54 @@ def verify_otp():
 
         flash("Invalid OTP. Trust reduced by 10.", "danger")
 
-    return render_template("verify_otp.html")
+    return render_template("verify_otp.html", qr_b64=qr_b64, secret=totp_secret)
+
+@app.route("/enroll_totp")
+@login_required
+def enroll_totp():
+    """Generates a base32 secret and QR code for Google Auth enrollment."""
+    user_id = session.get("user_id")
+    conn = get_db()
+    user = conn.execute("SELECT * FROM users WHERE id=?", (user_id,)).fetchone()
+    
+    if not user:
+        return redirect(url_for("login"))
+        
+    # Get or generate secret
+    totp_secret = None
+    try:
+        totp_secret = user["totp_secret"]
+    except IndexError:
+        pass
+        
+    if not totp_secret:
+        # Generate new secret if they don't have one
+        totp_secret = pyotp.random_base32()
+        try:
+            conn.execute("UPDATE users SET totp_secret=? WHERE id=?", (totp_secret, user_id))
+            conn.commit()
+            log_action(f"Generated new TOTP secret for {user['username']}")
+        except Exception as e:
+            print(f"[ERROR] Could not save TOTP secret: {e}")
+            flash("Failed to generate MFA token. Please contact logic administrator.", "danger")
+            return redirect(url_for("dashboard"))
+
+    # Generate Provisioning URI
+    totp = pyotp.TOTP(totp_secret)
+    provisioning_uri = totp.provisioning_uri(name=user["email"], issuer_name="ZeroTrust Portal")
+
+    # Generate QR Code Graphic
+    qr = qrcode.QRCode(version=1, box_size=10, border=4)
+    qr.add_data(provisioning_uri)
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="black", back_color="white")
+    
+    # Save Image to purely active memory Buffer
+    buf = io.BytesIO()
+    img.save(buf)
+    image_base64 = base64.b64encode(buf.getvalue()).decode("ascii")
+    
+    return render_template("enroll_totp.html", secret=totp_secret, qr_b64=image_base64)
 
 @app.route('/logout')
 def logout():

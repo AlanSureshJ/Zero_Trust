@@ -1,6 +1,2 @@
-echo "*.db
-__pycache__/
-*.pyc
-.env
-venv/
-*.sqlite" > .gitignore
+# Created by venv; see https://docs.python.org/3/library/venv.html
+*

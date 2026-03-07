@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}OTP Verification - Student Management Portal{% endblock %}
+{% block title %}Google Authenticator - Student Management Portal{% endblock %}
 
 {% block content %}
 <div class="auth-container">
@@ -9,24 +9,38 @@
         <!-- Header -->
         <div class="auth-header">
             <div class="auth-icon otp-icon">
-                <i class="fa-solid fa-key"></i>
+                <i class="fa-solid fa-shield-halved"></i>
             </div>
 
-            <h1>OTP Verification</h1>
-            <p>Enter the 6-digit code sent to your registered email</p>
+            <h1>Google Authenticator</h1>
+            <p>Scan the QR code below, then enter the 6-digit code</p>
+        </div>
 
-            {% if username %}
-            <p class="username-display">
-                <i class="fa-solid fa-user-lock"></i>
-                Logging in as <strong>{{ username }}</strong>
+        <!-- QR Code Section -->
+        {% if qr_b64 %}
+        <div style="text-align: center; padding: 15px 0;">
+            <div style="background: white; padding: 15px; display: inline-block; border-radius: 10px; border: 2px solid var(--border);">
+                <img src="data:image/png;base64,{{ qr_b64 }}" alt="TOTP QR Code" style="width: 180px; height: 180px;">
+            </div>
+            <p style="margin-top: 10px; font-size: 0.85rem; color: var(--text-muted);">
+                <i class="fa-solid fa-mobile-screen"></i>
+                Scan with <strong>Google Authenticator</strong>
             </p>
+            {% if secret %}
+            <details style="margin-top: 8px;">
+                <summary style="cursor: pointer; font-size: 0.8rem; color: var(--text-muted);">Can't scan? Enter key manually</summary>
+                <div style="background: var(--bg-color); padding: 10px; border-radius: 6px; font-family: monospace; font-size: 0.9rem; letter-spacing: 1.5px; margin-top: 8px; border: 1px dashed var(--border); word-break: break-all;">
+                    {{ secret }}
+                </div>
+            </details>
             {% endif %}
         </div>
+        {% endif %}
 
         <!-- OTP Form -->
         <form method="POST" class="auth-form">
             <div class="form-group">
-                <label for="otp">One-Time Password</label>
+                <label for="otp">6-Digit Code</label>
                 <input
                     type="text"
                     id="otp"
@@ -48,11 +62,6 @@
 
         <!-- Footer -->
         <div class="auth-footer">
-            <p class="otp-note">
-                <i class="fa-regular fa-clock"></i>
-                OTP expires in <strong>5 minutes</strong>
-            </p>
-
             <p class="security-note">
                 <i class="fa-solid fa-shield-check"></i>
                 Zero-Trust verification enabled

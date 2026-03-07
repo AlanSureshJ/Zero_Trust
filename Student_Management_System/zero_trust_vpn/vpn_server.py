@@ -77,6 +77,11 @@ REPLAY_WINDOW = 30
 seen_nonces = set()
 nonce_lock  = threading.Lock()
 
+# Session tracking (for background cleanup)
+active_sessions = {}
+session_lock = threading.Lock()
+SESSION_TIMEOUT = 3600  # 1 hour
+
 def allowed(role, path):
     for allowed_path in POLICY.get(role, []):
         if path.startswith(allowed_path):
