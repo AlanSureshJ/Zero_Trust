@@ -12,6 +12,7 @@
 </head>
 
 <body>
+    <div class="toast-container" id="toast-container"></div>
     {% if session.get('user_id') %}
     <nav class="navbar">
         <div class="trust-banner">
@@ -40,7 +41,7 @@
         {% if messages %}
         <div class="flash-container">
             {% for category, message in messages %}
-            {% if category != 'logout_reason' %}
+            {% if category != 'logout_reason' and category != 'trust_alert' %}
             <div class="flash flash-{{ category }}">
                 <span class="flash-text">{{ message }}</span>
                 <button class="flash-close" onclick="this.parentElement.remove()">×</button>
@@ -50,10 +51,30 @@
         </div>
 
         <script>
-            // Check for logout reason popups
+            function showTrustAlert(message) {
+                const container = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                toast.className = 'trust-toast';
+                toast.innerHTML = `
+                    <i class="fa-solid fa-shield-virus"></i>
+                    <div class="toast-content">
+                        <h4>Security Alert</h4>
+                        <p>${message}</p>
+                    </div>
+                `;
+                container.appendChild(toast);
+
+                // Auto-remove after 5 seconds
+                setTimeout(() => {
+                    toast.classList.add('toast-out');
+                    setTimeout(() => toast.remove(), 400);
+                }, 5000);
+            }
+
+            // Check for logout reason or trust alerts
             {% for category, message in messages %}
-            {% if category == 'logout_reason' %}
-            alert("{{ message|safe }}");
+            {% if category == 'logout_reason' or category == 'trust_alert' %}
+            showTrustAlert("{{ message|safe }}");
             {% endif %}
             {% endfor %}
         </script>

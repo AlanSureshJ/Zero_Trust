@@ -7,7 +7,7 @@ priv = load_private_key('zero_trust_vpn/keys/private.pem')
 
 original = '{"jwt": "test.token.here", "path": "/dashboard"}'
 wire = encrypt_payload(original, pub)
-recovered = decrypt_payload(wire, priv)
+recovered = decrypt_payload(wire[4:], priv)
 
 print('Original: ', original)
 print('Recovered:', recovered)

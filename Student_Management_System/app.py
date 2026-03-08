@@ -1235,7 +1235,7 @@ def login():
             conn.execute("UPDATE users SET trust_score=?, device_fp=? WHERE id=?", (new_trust, current_fp, user["id"]))
             conn.commit()
             security_alert = "New device detected. Trust score reduced for security."
-            flash("New device detected. Trust score reduced for security.","warning")
+            flash(security_alert, "trust_alert")
         
         # Store pre-auth session variables
         session["pre_auth_user_id"] = user["id"]
@@ -1328,7 +1328,7 @@ def vpn_tunnel():
                         conn = get_db()
                         conn.execute("UPDATE users SET trust_score=? WHERE id=?", (new_trust, user_id))
                         conn.commit()
-                    flash("VPN Access Denied: Unauthorized resource. Trust score reduced.", "danger")
+                    flash("VPN Access Denied: Unauthorized resource. Trust score reduced.", "trust_alert")
                     return redirect(url_for("restricted"))
             except Exception:
                 pass
@@ -1531,7 +1531,7 @@ def verify_otp():
             for anomaly in anomalies:
                 penalty += anomaly["penalty"]
                 log_action(f"ANOMALY_DETECTED | User: {username} | Type: {anomaly['type']} | {anomaly['msg']}")
-                flash(f"⚠ Security Alert: {anomaly['msg']} (Trust -{anomaly['penalty']})", "warning")
+                flash(f"⚠ Security Alert: {anomaly['msg']} (Trust -{anomaly['penalty']})", "trust_alert")
             
             new_trust = max(0, new_trust - penalty)
             
@@ -1553,8 +1553,9 @@ def verify_otp():
             # 3. Record Login Pattern for Future Detection
             record_login_event(user_id, current_ip)
 
-            # ⚠️ SAVE ROLE BEFORE CLEAR
+            # ⚠️ SAVE ROLE AND ALERTS BEFORE CLEAR
             role = session.get("pre_auth_role")
+            security_alert = session.get("pre_auth_security_alert")
             
             session.clear()
             # Generate JWT
@@ -1575,6 +1576,9 @@ def verify_otp():
                 "jwt": token
             })
 
+            if security_alert:
+                flash(security_alert, "trust_alert")
+
             flash("Login successful!", "success")
             return redirect(url_for("dashboard"))
 
@@ -1583,6 +1587,7 @@ def verify_otp():
             "UPDATE users SET otp_failures = otp_failures + 1, trust_score = trust_score - 10 WHERE id=?",
             (user_id,)
         )
+        flash("Invalid OTP. Trust score reduced.", "trust_alert")
         conn.commit()
 
         user = conn.execute(
@@ -1602,7 +1607,6 @@ def verify_otp():
             session.clear()
             return redirect(url_for("login"))
 
-        flash("Invalid OTP. Trust reduced by 10.", "danger")
 
     return render_template("verify_otp.html", qr_b64=qr_b64, secret=totp_secret)
 
@@ -2786,7 +2790,7 @@ def verify_profile_otp():
 
     if str(session.get('profile_change_otp')) != entered_otp:
         reduce_trust("invalid_otp", 10)
-        flash("Invalid OTP. Trust score reduced.", "danger")
+        flash("Invalid OTP. Trust score reduced.", "trust_alert")
         return redirect(url_for("student_profile"))
 
 
