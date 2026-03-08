@@ -15,6 +15,6 @@ psycopg2-binary==2.9.11
 gunicorn==21.2.0
 pyotp==2.9.0
 qrcode==7.4.2
-Pillow==10.2.0
+Pillow>=10.2.0
 # Zero Trust VPN Dependencies
 # (Cryptography is already included above)
