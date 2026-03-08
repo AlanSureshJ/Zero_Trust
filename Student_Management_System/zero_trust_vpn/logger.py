@@ -5,24 +5,33 @@ import threading
 import traceback
 import json
 import base64
+import sys
+from datetime import datetime
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
 # =========================
-# LOG DIRECTORY SETUP
+# DATABASE SETUP
+# =========================
+# Ensure we can find db_adapter
+root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if root_dir not in sys.path:
+    sys.path.append(root_dir)
+
+try:
+    from db_adapter import db_adapter
+except ImportError:
+    # Fallback for when logger is used in isolation or early init
+    db_adapter = None
+
+# =========================
+# LOG DIRECTORY SETUP (Backward Compatibility / Fallback)
 # =========================
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 LOGS_DIR = os.path.join(BASE_DIR, "..", "logs")
-
 os.makedirs(LOGS_DIR, exist_ok=True)
 
-SESSION_LOG = os.path.join(LOGS_DIR, "session.log")
-SECURITY_LOG = os.path.join(LOGS_DIR, "security.log")
-ERROR_LOG = os.path.join(LOGS_DIR, "error.log")
-
-# Thread lock to prevent race conditions
+# Thread lock to prevent race conditions during sequence increment
 log_lock = threading.Lock()
-
-# Persistent state for sequence numbering
 _sequence_number = 0
 
 # Load Log Encryption Key
@@ -38,101 +47,82 @@ except FileNotFoundError:
 # =========================
 # INTERNAL WRITE FUNCTION
 # =========================
-def _write_log(filepath, message):
+def _write_log(category, username, message):
     global _sequence_number
     with log_lock:
         _sequence_number += 1
         
+        nonce_str = None
+        encrypted_data = None
+        plain_message = None
+
         if LOG_KEY:
             # Encrypt with AES-GCM
             nonce = os.urandom(12)
-            # Add sequence number to plaintext for audit integrity
             payload = f"SEQ={_sequence_number} | {message}".encode("utf-8")
             ciphertext = aesgcm.encrypt(nonce, payload, None)
             
-            # Write as Base64 JSON envelope
-            entry = {
-                "seq": _sequence_number,
-                "nonce": base64.b64encode(nonce).decode("utf-8"),
-                "data": base64.b64encode(ciphertext).decode("utf-8")
-            }
-            line = json.dumps(entry)
+            nonce_str = base64.b64encode(nonce).decode("utf-8")
+            encrypted_data = base64.b64encode(ciphertext).decode("utf-8")
         else:
-            line = f"SEQ={_sequence_number} | {message}"
+            plain_message = f"SEQ={_sequence_number} | {message}"
 
+        # Write to Database
+        if db_adapter:
+            try:
+                conn = db_adapter.get_connection()
+                conn.execute(
+                    "INSERT INTO system_logs (category, username, seq, nonce, encrypted_data, plain_message, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    (category, username, _sequence_number, nonce_str, encrypted_data, plain_message, datetime.utcnow().isoformat())
+                )
+                # Auto-prune: keep only the latest 50 rows
+                try:
+                    conn.execute("DELETE FROM system_logs WHERE id NOT IN (SELECT id FROM system_logs ORDER BY id DESC LIMIT 50)")
+                except Exception:
+                    pass
+                conn.commit()
+                conn.close()
+            except Exception as e:
+                print(f"[LOGGER ERROR] Database write failed: {e}")
+                # Fallback to local file if DB is down
+                _write_to_file(category, _sequence_number, nonce_str, encrypted_data, plain_message)
+        else:
+            _write_to_file(category, _sequence_number, nonce_str, encrypted_data, plain_message)
+
+def _write_to_file(category, seq, nonce, data, plain):
+    """Fallback file logging"""
+    filepath = os.path.join(LOGS_DIR, f"{category.lower()}.log")
+    if plain:
+        line = plain
+    else:
+        line = json.dumps({"seq": seq, "nonce": nonce, "data": data})
+    
+    try:
         with open(filepath, "a", encoding="utf-8") as f:
             f.write(line + "\n")
-            f.flush()
-
+    except:
+        pass
 
 # =========================
-# GENERAL EVENT LOG
+# LOGGING INTERFACE
 # =========================
 def log_event(username, action, status, reason=""):
-    """
-    Logs normal system activity:
-    login, logout, access, trust changes, OTP, VPN decisions
-    """
-    timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
-    msg = f"{timestamp} | USER={username} | ACTION={action} | STATUS={status} | REASON={reason}"
-    _write_log(SESSION_LOG, msg)
+    msg = f"USER={username} | ACTION={action} | STATUS={status} | REASON={reason}"
+    _write_log("SESSION", username, msg)
 
-
-# =========================
-# SUSPICIOUS / SECURITY LOG
-# =========================
 def log_suspicious(username, reason, metadata=""):
-    """
-    Logs suspicious behavior:
-    brute-force, RBAC violation, rate-limit, unusual behavior
-    """
-    timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
-    msg = f"{timestamp} | USER={username} | ⚠ SUSPICIOUS | {reason} | {metadata}"
-    _write_log(SECURITY_LOG, msg)
+    msg = f"USER={username} | ⚠ SUSPICIOUS | {reason} | {metadata}"
+    _write_log("SECURITY", username, msg)
 
-
-# =========================
-# TRUST SCORE LOG
-# =========================
 def log_trust_change(username, old_score, new_score, reason):
-    """
-    Explicit trust score transitions
-    """
-    timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
-    msg = (
-        f"{timestamp} | USER={username} | TRUST_CHANGE | "
-        f"{old_score} → {new_score} | REASON={reason}"
-    )
-    _write_log(SESSION_LOG, msg)
+    msg = f"USER={username} | TRUST_CHANGE | {old_score} → {new_score} | REASON={reason}"
+    _write_log("SESSION", username, msg)
 
-
-# =========================
-# VPN / ZERO TRUST LOG
-# =========================
 def log_vpn_decision(username, role, path, decision, trust_score):
-    """
-    Logs Zero Trust VPN policy decisions
-    """
-    timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
-    msg = (
-        f"{timestamp} | USER={username} | ROLE={role} | PATH={path} | "
-        f"DECISION={decision} | TRUST={trust_score}"
-    )
-    _write_log(SESSION_LOG, msg)
+    msg = f"USER={username} | ROLE={role} | PATH={path} | DECISION={decision} | TRUST={trust_score}"
+    _write_log("SESSION", username, msg)
 
-
-# =========================
-# ERROR LOGGING
-# =========================
 def log_error(context, exc: Exception):
-    """
-    Logs uncaught exceptions with stack trace
-    """
-    timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
     trace = traceback.format_exc()
-    msg = (
-        f"{timestamp} | ❌ ERROR | CONTEXT={context}\n"
-        f"{trace}\n"
-        f"{'-'*60}"
-    )
-    _write_log(ERROR_LOG, msg)
+    msg = f"❌ ERROR | CONTEXT={context}\n{trace}"
+    _write_log("ERROR", "system", msg)

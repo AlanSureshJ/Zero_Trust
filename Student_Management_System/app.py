@@ -334,6 +334,18 @@ def init_db():
         FOREIGN KEY(assignment_id) REFERENCES assignments(id) ON DELETE CASCADE,
         FOREIGN KEY(student_id) REFERENCES students(id) ON DELETE CASCADE
     );
+
+    -- New: System Logs (Cloud-ready encrypted logs)
+    CREATE TABLE IF NOT EXISTS system_logs (
+        id {id_type},
+        category TEXT NOT NULL, -- SESSION, SECURITY, ERROR
+        username TEXT,
+        seq INTEGER,
+        nonce TEXT,
+        encrypted_data TEXT,
+        plain_message TEXT, -- Fallback for unencrypted items
+        timestamp {ts_type}
+    );
     """
     conn.executescript(schema)
     
@@ -397,7 +409,11 @@ def write_access_log(conn, user_id, action, resource, resource_id, allowed, reas
         "INSERT INTO access_logs (user_id, action, resource, resource_id, allowed, reason, ip, ua, timestamp) VALUES (?,?,?,?,?,?,?,?,?)",
         (user_id, action, resource, resource_id, int(bool(allowed)), reason, ip, ua, datetime.utcnow().isoformat())
     )
-    conn.commit()
+    # Auto-prune: keep only the latest 50 rows
+    try:
+        conn.execute("DELETE FROM access_logs WHERE id NOT IN (SELECT id FROM access_logs ORDER BY id DESC LIMIT 50)")
+    except Exception as e:
+        print(f"[LOG PRUNE] access_logs prune error: {e}")
     conn.commit()
 
 # =============================================================================
@@ -464,67 +480,64 @@ def parse_log_line(content):
     return data
 
 def get_decrypted_log_entries(log_type="session", limit=100):
-    """Decrypts and returns entries from the specified secure log file."""
-    log_paths = {
-        "session": logger.SESSION_LOG,
-        "security": logger.SECURITY_LOG,
-        "error": logger.ERROR_LOG
-    }
-    filepath = log_paths.get(log_type)
-    if not filepath or not os.path.exists(filepath):
+    """Refactored to fetch and decrypt entries from the system_logs database table."""
+    conn = get_db()
+    try:
+        cur = conn.execute(
+            "SELECT category, seq, nonce, encrypted_data, plain_message, timestamp FROM system_logs WHERE category = ? ORDER BY id DESC LIMIT ?",
+            (log_type.upper(), limit)
+        )
+        rows = cur.fetchall()
+    except Exception as e:
+        print(f"[ERROR] DB Log Fetch Error: {e}")
         return []
 
-    # Get log key
+    # Get log key for decryption
     try:
         with open(logger.LOG_KEY_PATH, "rb") as f:
             log_key = f.read()
         aesgcm = AESGCM(log_key)
     except:
-        return [{"timestamp": "ERROR", "message": "Log key not found or invalid"}]
+        aesgcm = None
 
     entries = []
-    try:
-        with open(filepath, "r", encoding="utf-8") as f:
-            lines = f.readlines()
-            # Most recent first
-            for line in reversed(lines):
-                if len(entries) >= limit:
-                    break
+    for row in rows:
+        entry_data = {
+            "timestamp": row["timestamp"],
+            "encrypted": bool(row["encrypted_data"])
+        }
+        
+        try:
+            if row["encrypted_data"] and aesgcm:
+                nonce = b64decode(row["nonce"])
+                ciphertext = b64decode(row["encrypted_data"])
+                decrypted = aesgcm.decrypt(nonce, ciphertext, None).decode("utf-8")
                 
-                line = line.strip()
-                if not line: continue
-                
-                try:
-                    # Encrypted JSON format
-                    data = json.loads(line)
-                    nonce = b64decode(data["nonce"])
-                    ciphertext = b64decode(data["data"])
-                    decrypted = aesgcm.decrypt(nonce, ciphertext, None).decode("utf-8")
-                    
-                    # Structured parsing
-                    entry_data = {"encrypted": True}
-                    
-                    # Split SEQ if present
-                    if " | " in decrypted:
-                        parts = decrypted.split(" | ", 1)
-                        if parts[0].startswith("SEQ="):
-                            entry_data["seq"] = parts[0].split("=", 1)[1]
-                            content = parts[1]
-                        else:
-                            content = decrypted
+                # Split SEQ if present (logger.py adds it)
+                if " | " in decrypted:
+                    parts = decrypted.split(" | ", 1)
+                    if parts[0].startswith("SEQ="):
+                        entry_data["seq"] = parts[0].split("=", 1)[1]
+                        content = parts[1]
                     else:
                         content = decrypted
-                        
-                    # Parse the actual log content
-                    parsed = parse_log_line(content)
-                    entry_data.update(parsed)
-                    entries.append(entry_data)
-                except:
-                    # Legacy plaintext format
-                    parsed = parse_log_line(line)
-                    entries.append({"encrypted": False, **parsed})
-    except Exception as e:
-        entries.append({"message": f"Error reading log: {str(e)}"})
+                else:
+                    content = decrypted
+            else:
+                # Fallback to plain message if logic or key missing
+                content = row["plain_message"] or "Log not decryptable"
+                if row["seq"]: entry_data["seq"] = row["seq"]
+
+            # Parse the actual log content (remains same logic)
+            parsed = parse_log_line(content)
+            entry_data.update(parsed)
+            # Ensure timestamp from DB is used if parse_log_line didn't find one
+            if "timestamp" not in entry_data or not entry_data["timestamp"]:
+                entry_data["timestamp"] = row["timestamp"]
+            
+            entries.append(entry_data)
+        except Exception as e:
+            entries.append({"timestamp": row["timestamp"], "message": f"Error parsing log: {str(e)}"})
     
     return entries
 

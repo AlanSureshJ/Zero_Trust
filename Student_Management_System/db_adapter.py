@@ -72,22 +72,20 @@ class DatabaseAdapter:
         if self._is_postgres:
             try:
                 if "[YOUR-PASSWORD]" in db_url:
-                    raise ValueError("You must replace [YOUR-PASSWORD] in your .env file with your actual Supabase database password.")
+                    raise ValueError("You must replace [YOUR-PASSWORD] in your .env file with your actual database password.")
                 
                 conn = psycopg2.connect(db_url)
-                # Use DictCursor to mimic sqlite3.Row behavior (both key and index access)
+                print(f"[DB] Connected to POSTGRES (Neon DB)")
                 conn.cursor_factory = extras.DictCursor
                 return ConnectionWrapper(conn, True)
             except Exception as e:
-                print(f"[ERROR] PostgreSQL Connection Failed: {e}")
-                print("[INFO] Falling back to SQLite for safety (local mode)")
-                self._is_postgres = False
+                print(f"[CRITICAL] PostgreSQL Connection Failed: {e}")
+                # We stop exactly here because the user wants POSTGRES ONLY.
+                raise Exception("Cloud Deployment Error: Database is not available. Check DATABASE_URL.")
 
-        if not os.path.exists("db"):
-            os.makedirs("db")
-        conn = sqlite3.connect("db/portal.db")
-        conn.row_factory = sqlite3.Row
-        return ConnectionWrapper(conn, False)
+        # STRICT ENFORCEMENT: No SQLite fallback for production/cloud readiness
+        print("[CRITICAL] DATABASE_URL not set or not a postgres URL.")
+        raise Exception("Configuration Error: DATABASE_URL must be a valid PostgreSQL connection string for cloud deployment.")
 
     @property
     def is_postgres(self):

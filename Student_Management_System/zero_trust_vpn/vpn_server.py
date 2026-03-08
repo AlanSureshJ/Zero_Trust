@@ -12,11 +12,18 @@ import sys
 import struct
 from dotenv import load_dotenv
 
-# Add the zero_trust_vpn directory to sys.path
-sys.path.insert(0, os.path.dirname(__file__))
+# Add the root directory to sys.path to import db_adapter
+root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if root_dir not in sys.path:
+    sys.path.append(root_dir)
+
+# Add the current directory to sys.path for crypto_utils
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 import time
 import secrets
 from crypto_utils import decrypt_payload, load_private_key
+from db_adapter import db_adapter
 
 load_dotenv()
 
@@ -43,8 +50,7 @@ except ImportError:
     def log_vpn_decision(u, r, p, a, t): print(f"[VPN] {a} | {u} | {r} | {p} | trust:{t}")
     def log_error(m): print(f"[ERROR] {m}")
 
-# In-memory trust store
-trust_scores = {}
+# Trust store and sessions are now handled via database
 
 # Paths that are always allowed regardless of role
 PUBLIC_PATHS = [
@@ -77,9 +83,8 @@ REPLAY_WINDOW = 30
 seen_nonces = set()
 nonce_lock  = threading.Lock()
 
-# Session tracking (for background cleanup)
-active_sessions = {}
-session_lock = threading.Lock()
+# Replay protection nonces are currently local (could be moved to Redis in a cluster)
+# Session timeout for database cleanup
 SESSION_TIMEOUT = 3600  # 1 hour
 
 def allowed(role, path):
@@ -159,9 +164,18 @@ def handle_client(conn, addr):
             conn.sendall(b"TOKEN_INVALID")
             return
 
-        # ─── Default: Path Check (RBAC) ──────────────────────────────────────
-        trust_scores.setdefault(username, BASE_TRUST)
-        trust = trust_scores[username]
+        # ─── Auth Resolution (DB) ───────────────────────────────────────────
+        db_conn = db_adapter.get_connection()
+        try:
+            user_record = db_conn.fetchone("SELECT trust_score FROM users WHERE username = ?", (username,))
+            if not user_record:
+                # Fallback for new users or if not in DB yet
+                trust = BASE_TRUST
+            else:
+                trust = user_record["trust_score"]
+        except Exception as e:
+            print(f"[VPN] DB Trust Fetch Error: {e}")
+            trust = BASE_TRUST
 
         # ─── Always allow public/utility paths ──────────────────────────────
         if any(path.startswith(p) for p in PUBLIC_PATHS):
@@ -177,8 +191,17 @@ def handle_client(conn, addr):
 
         # ─── RBAC check ─────────────────────────────────────────────────────
         if not allowed(role, path):
-            trust_scores[username] = max(0, trust_scores[username] - RBAC_PENALTY)
-            trust = trust_scores[username]
+            trust = max(0, trust - RBAC_PENALTY)
+            
+            try:
+                db_conn.execute("UPDATE users SET trust_score = ? WHERE username = ?", (trust, username))
+                db_conn.execute(
+                    "INSERT INTO trust_history (user_id, old_score, new_score, reason, timestamp) VALUES ((SELECT id FROM users WHERE username=?), ?, ?, ?, ?)",
+                    (username, user_record["trust_score"] if user_record else BASE_TRUST, trust, f"RBAC violation: {path}", datetime.utcnow().isoformat())
+                )
+                db_conn.commit()
+            except Exception as e:
+                print(f"[VPN] DB Trust Update Error: {e}")
 
             response = json.dumps({
                 "action": "JWT_DOWNGRADED",
@@ -198,21 +221,27 @@ def handle_client(conn, addr):
     except Exception as e:
         print(f"[VPN] Handler error: {e}")
     finally:
+        if 'db_conn' in locals():
+            db_conn.close()
         conn.close()
 
 
 def session_cleanup_task():
-    """Background thread to prune dead VPN sessions."""
+    """Background thread to prune dead sessions in the database."""
     while True:
-        time.sleep(60)
-        with session_lock:
-            now = time.time()
-            to_delete = [sid for sid, data in active_sessions.items() 
-                         if now - data["last_seen"] > SESSION_TIMEOUT]
-            for sid in to_delete:
-                print(f"[VPN] SESSION_TIMEOUT: Expiring session {sid}")
-                del active_sessions[sid]
+        time.sleep(300)
+        try:
+            db_conn = db_adapter.get_connection()
+            # PostgreSQL requires slightly different interval syntax if strictly enforced,
+            # but since app.py handles active_session=0 on startup, we'll keep it simple for now.
+            db_conn.execute("UPDATE users SET active_session = 0 WHERE last_login < ?", 
+                           ((datetime.utcnow() - timedelta(hours=1)).isoformat(),))
+            db_conn.commit()
+            db_conn.close()
+        except Exception as e:
+            print(f"[VPN] Background cleanup error: {e}")
 
+from datetime import datetime, timedelta
 threading.Thread(target=session_cleanup_task, daemon=True).start()
 
 print(f"[VPN] Zero Trust Policy Server (RSA+AES encrypted) running on {HOST}:{PORT}")
