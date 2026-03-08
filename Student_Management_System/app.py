@@ -64,6 +64,13 @@ app = Flask(__name__)
 app.secret_key = SECRET_KEY
 app.permanent_session_lifetime = PERMANENT_SESSION_LIFETIME
 
+def get_real_ip():
+    """Get real client IP behind reverse proxy (Render, Nginx, etc.)."""
+    forwarded = request.headers.get('X-Forwarded-For', '')
+    if forwarded:
+        return forwarded.split(',')[0].strip()
+    return request.remote_addr or ''
+
 # Detective helper for Postgres (used for conditional logic in routes)
 def is_postgres_mode():
     return db_adapter.is_postgres
@@ -403,7 +410,7 @@ def close_db(error):
 # LOGGING UTILITIES
 # =============================================================================
 def write_access_log(conn, user_id, action, resource, resource_id, allowed, reason):
-    ip = request.remote_addr or ""
+    ip = get_real_ip()
     ua = request.headers.get('User-Agent', '')
     conn.execute(
         "INSERT INTO access_logs (user_id, action, resource, resource_id, allowed, reason, ip, ua, timestamp) VALUES (?,?,?,?,?,?,?,?,?)",
@@ -554,13 +561,13 @@ def trust_allows_sensitive():
 
 def get_device_fingerprint():
     ua = request.headers.get("User-Agent", "")
-    ip = request.remote_addr or ""
+    ip = get_real_ip()
     raw = ua + ip
     return hashlib.sha256(raw.encode()).hexdigest()
 
 def check_device_fingerprint(user_id):
     ua = request.headers.get("User-Agent")
-    ip = request.remote_addr
+    ip = get_real_ip()
 
     conn = get_db()
     existing = conn.execute("""
@@ -1532,7 +1539,7 @@ def verify_otp():
         # ✅ TOTP SUCCESS
         if totp.verify(code):
             # 1. Detect Anomalies and Calculate Trust
-            current_ip = request.remote_addr or "127.0.0.1"
+            current_ip = get_real_ip() or "127.0.0.1"
             username = session.get("pre_auth_username")
             anomalies = detect_anomalies(user_id, current_ip)
             
