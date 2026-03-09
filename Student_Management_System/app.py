@@ -1266,37 +1266,40 @@ def login():
         if (user["trust_score"] or 100) < 25:
             flash("Access Restricted: Your trust score is too low. Please contact admin.", "danger")
             return render_template("login.html", can_contact_admin=True, restricted_user=username)
-        if user["active_session"]:
-            # ✅ FIX: Check if the session is actually stale (no real active session)
-            # Force clear if last_login was more than 2 hours ago (session expired naturally)
-            last_login = user["last_login"]
-            if last_login:
-                try:
-                    last_dt = datetime.fromisoformat(last_login)
-                    if (datetime.utcnow() - last_dt).total_seconds() > 7200:  # 2 hours = session lifetime
-                        conn.execute("UPDATE users SET active_session=0 WHERE id=?", (user["id"],))
-                        conn.commit()
-                        user = conn.execute("SELECT * FROM users WHERE id=?", (user["id"],)).fetchone()
-                except:
-                    pass
-        if user["active_session"]:
-            flash("Already logged in from another device. Please logout first.", "danger")
-            return render_template("login.html")
         
-        # Device fingerprint check
+        # Device fingerprint check (Limit of 2 per account)
         current_fp = get_device_fingerprint()
-        stored_fp = user["device_fp"]
         security_alert = None
         
-        if stored_fp is None:
-            conn.execute("UPDATE users SET device_fp=? WHERE id=?", (current_fp, user["id"]))
+        devices = conn.execute("SELECT device_id FROM trusted_devices WHERE user_id=?", (user["id"],)).fetchall()
+        device_ids = [d["device_id"] for d in devices]
+        
+        if current_fp in device_ids:
+            # Update last seen
+            conn.execute("UPDATE trusted_devices SET last_seen=?, seen_count=seen_count+1 WHERE user_id=? AND device_id=?", 
+                         (datetime.utcnow().isoformat(), user["id"], current_fp))
             conn.commit()
-        elif stored_fp != current_fp:
-            new_trust = max(user["trust_score"] - 10, 0)
-            conn.execute("UPDATE users SET trust_score=?, device_fp=? WHERE id=?", (new_trust, current_fp, user["id"]))
-            conn.commit()
-            security_alert = "New device detected. Trust score reduced for security."
-            flash(security_alert, "trust_alert")
+        else:
+            if len(device_ids) >= 2:
+                flash("Login blocked: Maximum of 2 trusted devices reached. Please contact admin to reset.", "danger")
+                return render_template("login.html")
+            else:
+                conn.execute("INSERT INTO trusted_devices (user_id, device_id, first_seen, last_seen) VALUES (?, ?, ?, ?)",
+                             (user["id"], current_fp, datetime.utcnow().isoformat(), datetime.utcnow().isoformat()))
+                
+                # Add to device_fingerprints table too for forensic logs
+                ip = get_real_ip() or "127.0.0.1"
+                ua = request.headers.get("User-Agent", "")
+                conn.execute("INSERT INTO device_fingerprints (user_id, user_agent, ip_address, first_seen) VALUES (?, ?, ?, ?)",
+                             (user["id"], ua, ip, datetime.utcnow().isoformat()))
+                
+                if len(device_ids) > 0:
+                    new_trust = max((user["trust_score"] or 100) - 10, 0)
+                    conn.execute("UPDATE users SET trust_score=? WHERE id=?", (new_trust, user["id"]))
+                    security_alert = "New device detected. Trust score reduced for security."
+                    flash(security_alert, "trust_alert")
+                
+                conn.commit()
         
         # Store pre-auth session variables
         session["pre_auth_user_id"] = user["id"]
@@ -1641,7 +1644,12 @@ def verify_otp():
                 flash(security_alert, "trust_alert")
 
             flash("Login successful!", "success")
-            return redirect(url_for("dashboard"))
+            from flask import make_response
+            resp = make_response(redirect(url_for("dashboard")))
+            # Ensure the device fingerprint cookie is set so the device is consistently remembered
+            if request.cookies.get("trusted_device") != device_fp:
+                resp.set_cookie("trusted_device", device_fp, max_age=31536000, httponly=True, secure=True)
+            return resp
 
         # ❌ OTP FAILURE
         conn.execute(
