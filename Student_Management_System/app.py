@@ -1915,6 +1915,77 @@ def student_fees():
                            fees_due=fees_due,
                            next_due=next_due)
 
+@app.route('/student/pay_fees', methods=['POST'])
+@login_required
+@role_required(['student'])
+def pay_fees():
+    if not trust_allows_sensitive():
+        flash("Trust score must be at least 60 to make payments.", "warning")
+        return redirect(url_for("restricted"))
+        
+    uid = session["user_id"]
+    try:
+        amount = float(request.form.get("amount", 0))
+    except (ValueError, TypeError):
+        amount = 0
+        
+    payment_method = request.form.get("payment_method", "").strip()
+    totp_code = request.form.get("totp_code", "").strip()
+    
+    if amount <= 0 or not payment_method or not totp_code:
+        flash("Invalid payment details or missing TOTP code.", "danger")
+        return redirect(url_for("student_fees"))
+        
+    conn = get_db()
+    user = conn.execute("SELECT * FROM users WHERE id=?", (uid,)).fetchone()
+    student = conn.execute("SELECT * FROM students WHERE user_id=?", (uid,)).fetchone()
+    
+    if not student or not user:
+        flash("Record not found.", "danger")
+        return redirect(url_for("dashboard"))
+        
+    # Verify TOTP code
+    totp_secret = user["totp_secret"] if "totp_secret" in dict(user).keys() else None
+    
+    if not totp_secret:
+        flash("TOTP not enrolled. Please contact admin.", "danger")
+        return redirect(url_for("student_fees"))
+
+    totp = pyotp.TOTP(totp_secret)
+    if not totp.verify(totp_code):
+        reduce_trust("invalid_totp_payment", 10)
+        flash("Invalid TOTP code. Trust score reduced.", "trust_alert")
+        log_action(f"PAYMENT_FAILED | User: {user['username']} | Invalid TOTP for payment of ₹{amount}")
+        return redirect(url_for("student_fees"))
+
+    # Update DB for successful payment
+    import uuid
+    transaction_id = "TXN" + str(uuid.uuid4().hex[:10]).upper()
+    now = datetime.utcnow().isoformat()
+    
+    # Track the new values
+    new_paid = (student['fees_paid'] or 0) + amount
+    # Instead of re-calculating due statically from 150000, rely on the column if it's there
+    new_due = (student['fees_due'] or 0) - amount
+    if new_due < 0: new_due = 0
+    
+    conn.execute("""
+        INSERT INTO fee_payments (student_id, amount, payment_date, payment_method, transaction_id)
+        VALUES (?, ?, ?, ?, ?)
+    """, (student["id"], amount, now, payment_method, transaction_id))
+    
+    conn.execute("""
+        UPDATE students SET fees_paid=?, fees_due=? WHERE id=?
+    """, (new_paid, new_due, student["id"]))
+    
+    conn.commit()
+    
+    write_access_log(conn, uid, "pay_fees", "student", student["id"], True, f"paid_{amount}")
+    log_action(f"PAYMENT_SUCCESS | User {uid} paid ₹{amount} via {payment_method}. TXN: {transaction_id}")
+    flash(f"Payment of ₹{amount} successful! Transaction ID: {transaction_id}", "success")
+    
+    return redirect(url_for("student_fees"))
+
 @app.route('/student/notices')
 @login_required
 @role_required(['student'])
