@@ -1921,13 +1921,15 @@ def student_fees():
     payments = conn.execute("""SELECT * FROM fee_payments WHERE student_id=? ORDER BY payment_date DESC""",
                            (student["id"],)).fetchall()
     
-    # Calculate summary
-    total_fees = 150000  # Default or pull from a settings table if available
+    from utils.fee_calculator import get_fee_status
     fees_paid = student['fees_paid'] or 0
-    fees_due = total_fees - fees_paid
+    fee_status = get_fee_status(fees_paid)
     
-    # Static due date for demo or logic based on semester
-    next_due = "Jan 15" if fees_due > 0 else "N/A"
+    total_fees = fee_status["total_fees"]
+    fees_due = fee_status["current_due"]
+    total_remaining = fee_status["total_remaining"]
+    next_due = fee_status["next_due_date"]
+    active_quarter = fee_status["active_quarter"]
     
     track_behavior("view_fees")
     write_access_log(conn, uid, "view_fees", "student", student["id"], True, "ok")
@@ -1937,6 +1939,8 @@ def student_fees():
                            total_fees=total_fees,
                            fees_paid=fees_paid,
                            fees_due=fees_due,
+                           total_remaining=total_remaining,
+                           active_quarter=active_quarter,
                            next_due=next_due)
 
 @app.route('/student/pay_fees', methods=['POST'])
@@ -2235,11 +2239,15 @@ def parent_fees():
     payments = conn.execute("""SELECT * FROM fee_payments WHERE student_id=? ORDER BY payment_date DESC""",
                            (student["id"],)).fetchall()
     
-    # Calculate summary
-    total_fees = 150000 
+    from utils.fee_calculator import get_fee_status
     fees_paid = student['fees_paid'] or 0
-    fees_due = total_fees - fees_paid
-    next_due = "Jan 15" if fees_due > 0 else "N/A"
+    fee_status = get_fee_status(fees_paid)
+    
+    total_fees = fee_status["total_fees"]
+    fees_due = fee_status["current_due"]
+    total_remaining = fee_status["total_remaining"]
+    next_due = fee_status["next_due_date"]
+    active_quarter = fee_status["active_quarter"]
     
     track_behavior("parent_view_fees")
     write_access_log(conn, uid, "parent_view_fees", "student", student["id"], True, "ok")
@@ -2249,6 +2257,8 @@ def parent_fees():
                            total_fees=total_fees,
                            fees_paid=fees_paid,
                            fees_due=fees_due,
+                           total_remaining=total_remaining,
+                           active_quarter=active_quarter,
                            next_due=next_due)
 
 @app.route('/parent/notices')
@@ -3149,6 +3159,14 @@ def server_error(e):
 # RUN APPLICATION
 # =============================================================================
 if __name__ == "__main__":
+    import os
+    if os.environ.get("WERKZEUG_RUN_MAIN") == "true" or not app.debug:
+        try:
+            from utils.fee_checker import start_background_fee_checker
+            start_background_fee_checker()
+            print("[INIT] Fee checker background service started.")
+        except Exception as e:
+            print(f"[INIT] Warning: Could not start fee checker: {e}")
     print("=" * 60)
     print("STUDENT MANAGEMENT PORTAL")
     print("=" * 60)

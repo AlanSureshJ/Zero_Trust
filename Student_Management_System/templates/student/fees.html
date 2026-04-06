@@ -23,12 +23,12 @@
         <div class="stat-card stat-warning">
             <div class="stat-icon">!</div>
             <div class="stat-value">₹{{ fees_due|round(0, 'common') }}</div>
-            <div class="stat-label">Pending Amount</div>
+            <div class="stat-label">Due Now ({{ active_quarter }})</div>
         </div>
         <div class="stat-card">
             <div class="stat-icon">📅</div>
             <div class="stat-value">{{ next_due }}</div>
-            <div class="stat-label">Next Due Date</div>
+            <div class="stat-label">Deadline</div>
         </div>
     </div>
 
